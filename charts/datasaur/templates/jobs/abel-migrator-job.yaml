@@ -1,0 +1,39 @@
+{{- if .Values.jobs.abelMigrator }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: {{ .Release.Name }}-abel-migrator
+  name: {{ .Release.Name }}-abel-migrator
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-abel-migrator
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-backend-abel-migrator
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+          env:
+            - name: ANSWER_LABELING_ENABLE_QUESTION_MIGRATION_CRON
+              value: "true"
+            - name: ANSWER_LABELING_QUESTION_MIGRATION_FORCE_REPLACE
+              value: "true"
+            - name: ANSWER_LABELING_ENABLE_DOCUMENT_ANSWER_MIGRATION_CRON
+              value: "true"
+            - name: ANSWER_LABELING_DOCUMENT_ANSWER_MIGRATION_FORCE_REPLACE
+              value: "true"
+            - name: ANSWER_LABELING_ENABLE_ROW_ANSWER_MIGRATION_CRON
+              value: "true"
+            - name: ANSWER_LABELING_ROW_ANSWER_MIGRATION_FORCE_REPLACE
+              value: "true"
+      restartPolicy: Never
+{{- end }}

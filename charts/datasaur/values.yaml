@@ -1,0 +1,148 @@
+image:
+  registry: ""
+  dockerTag: "latest"
+  pullPolicy: "IfNotExists"
+
+services:
+  backend:
+    replicas: 2
+    resources:
+      auto: true
+      requests:
+        cpu: null
+        memory: null
+      limits:
+        cpu: null
+        memory: null
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80
+  worker:
+    critical:
+      replicas: 2
+      resources:
+        auto: true
+        requests:
+          cpu: null
+          memory: null
+        limits:
+          cpu: null
+          memory: null
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 10
+        targetCPUUtilizationPercentage: 80
+        targetMemoryUtilizationPercentage: 80
+    background:
+      replicas: 2
+      resources:
+        auto: true
+        requests:
+          cpu: null
+          memory: null
+        limits:
+          cpu: null
+          memory: null
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 10
+        targetCPUUtilizationPercentage: 80
+        targetMemoryUtilizationPercentage: 80
+    external:
+      replicas: 1
+      resources:
+        auto: true
+        requests:
+          cpu: null
+          memory: null
+        limits:
+          cpu: null
+          memory: null
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 10
+        targetCPUUtilizationPercentage: 80
+        targetMemoryUtilizationPercentage: 80
+  database:
+    enabled: false
+    resources:
+      auto: true
+      requests:
+        cpu: null
+        memory: null
+      limits:
+        cpu: null
+        memory: null
+    storage: 40G
+  frontend:
+    resources:
+      auto: true
+      requests:
+        cpu: null
+        memory: null
+      limits:
+        cpu: null
+        memory: null
+  apacheTika:
+    enabled: true
+  audiowaveformGenerator:
+    enabled: true
+  documentConverter:
+    enabled: true
+  languageTool:
+    enabled: true
+  presidioAnalyzer:
+    enabled: true
+  rabbitmq:
+    enabled: false
+  redis:
+    enabled: false
+
+tls:
+  cert: null
+  key: null
+  ca: null
+  verifyDepth: "1"
+  errorPage: null
+
+env: null
+
+secret: null
+
+imageCredentials:
+  username: ""
+  password: ""
+
+ingress:
+  host: null
+  proxyBodySize: 125m
+
+files: {}
+
+jobs:
+  abelMigrator: false
+
+loki:
+  enabled: true
+  auth:
+    username: null
+    password: null
+  grafana:
+    enabled: false
+    grafana.ini:
+      server:
+        domain: "{{ .Values.ingress.host }}"
+        root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+        serve_from_sub_path: true
+  promtail:
+    config:
+      logLevel: info
+      serverPort: 3101
+      clients:
+        - url: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push

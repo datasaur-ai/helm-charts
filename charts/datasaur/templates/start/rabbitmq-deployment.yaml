@@ -1,0 +1,54 @@
+{{- if .Values.services.rabbitmq.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-rabbitmq-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-rabbitmq
+  ports:
+    - protocol: TCP
+      name: main
+      port: 5672
+      targetPort: 5672
+    - protocol: TCP
+      name: console
+      port: 15672
+      targetPort: 15672
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-rabbitmq
+  name: {{ .Release.Name }}-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-rabbitmq
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: {{ .Release.Name }}-rabbitmq
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}rabbitmq:3.8-management
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-rabbitmq
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: $(RABBITMQ_USERNAME)
+            - name: RABBITMQ_DEFAULT_PASS
+              value: $(RABBITMQ_PASSWORD)
+{{- end -}}

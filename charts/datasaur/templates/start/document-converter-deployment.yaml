@@ -1,0 +1,37 @@
+{{- if .Values.services.documentConverter.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-document-converter-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-document-converter
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-document-converter
+  name: {{ .Release.Name }}-document-converter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-document-converter
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-document-converter
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}thecodingmachine/gotenberg:6
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-document-converter
+{{- end -}}

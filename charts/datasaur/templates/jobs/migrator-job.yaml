@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: {{ .Release.Name }}-migrator
+  name: {{ .Release.Name }}-migrator
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-migrator
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-backend-migrator
+          command: ["/usr/src/app/migration.sh"]
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+      restartPolicy: Never

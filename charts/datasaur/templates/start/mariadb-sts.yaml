@@ -1,0 +1,73 @@
+{{- if .Values.services.database.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mariadb-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-mariadb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: {{ .Release.Name }}-mariadb
+  name: {{ .Release.Name }}-mariadb
+spec:
+  serviceName: "{{ .Release.Name }}-mariadb-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-mariadb
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: {{ .Release.Name }}-mariadb
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}mariadb:10.3.8
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-mariadb
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+          env:
+            - name: MYSQL_DATABASE
+              value: $(DATABASE_NAME)
+            - name: MYSQL_USER
+              value: $(DATABASE_USERNAME)
+            - name: MYSQL_PASSWORD
+              value: $(DATABASE_PASSWORD)
+            - name: MYSQL_ROOT_PASSWORD
+              value: $(DATABASE_PASSWORD)
+          {{- if not .Values.services.database.resources.auto }}
+          resources:
+            limits:
+              cpu: {{ .Values.services.database.resources.limits.cpu }}
+              memory: {{ .Values.services.database.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.services.database.resources.requests.cpu }}
+              memory: {{ .Values.services.database.resources.requests.memory }}
+          {{- end }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-mariadb-data
+              mountPath: /var/lib/mysql/
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-mariadb-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.services.database.storage }}
+{{- end -}}

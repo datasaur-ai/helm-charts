@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: datasaur-env
+data: 
+  API_URL: {{ .Release.Name }}-backend-service:8080
+  DATABASE_HOST: {{ .Release.Name }}-mariadb-service
+  REDIS_HOST: {{ .Release.Name }}-redis-service
+  RABBITMQ_URLS: amqp://_main._tcp.{{ .Release.Name }}-rabbitmq-service:5672
+  APACHE_TIKA_SERVICE_HOST: http://{{ .Release.Name }}-apache-tika-service:9998
+  DOCUMENT_CONVERTER_SERVICE_HOST: http://{{ .Release.Name }}-document-converter-service:3000
+  LANGUAGE_TOOL_SERVICE_ENDPOINT: http://{{ .Release.Name }}-language-tool-service:8010/v2/check
+  PRESIDIO_ANALYZER_ENDPOINT: http://{{ .Release.Name }}-presidio-analyzer-service:3000/analyze
+  WAVEFORM_PEAKS_GENERATOR_HOST: http://{{ .Release.Name }}-audiowaveform-generator-service:5005
+{{- if .Values.env }}
+{{ .Values.env | toYaml | indent 2 }}
+{{- end }}

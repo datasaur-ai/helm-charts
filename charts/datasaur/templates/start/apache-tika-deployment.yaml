@@ -1,0 +1,38 @@
+{{- if .Values.services.apacheTika.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-apache-tika-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-apache-tika
+  ports:
+    - protocol: TCP
+      port: 9998
+      targetPort: 9998
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-apache-tika
+  name: {{ .Release.Name }}-apache-tika
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-apache-tika
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-apache-tika
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}apache/tika:2.3.0
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-apache-tika
+
+{{- end -}}

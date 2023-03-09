@@ -1,0 +1,67 @@
+{{- if .Values.services.presidioAnalyzer.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-presidio-analyzer-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-presidio-analyzer
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-presidio-analyzer
+  name: {{ .Release.Name }}-presidio-analyzer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-presidio-analyzer
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-presidio-analyzer
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/presidio-analyzer:v1.0.4
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-presidio-analyzer
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+          env:
+            - name: PORT
+              value: "3000"
+          livenessProbe:
+            exec:
+              command:
+                - wget
+                - http://localhost:3000/health
+                - "-q"
+                - "-O"
+                - "-"
+            failureThreshold: 3
+            periodSeconds: 20
+            timeoutSeconds: 2
+          readinessProbe:
+            exec:
+              command:
+                - wget
+                - http://localhost:3000/health
+                - "-q"
+                - "-O"
+                - "-"
+            failureThreshold: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+{{- end -}}
