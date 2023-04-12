@@ -12,6 +12,7 @@ data:
   LANGUAGE_TOOL_SERVICE_ENDPOINT: http://{{ .Release.Name }}-language-tool-service:8010/v2/check
   PRESIDIO_ANALYZER_ENDPOINT: http://{{ .Release.Name }}-presidio-analyzer-service:3000/analyze
   WAVEFORM_PEAKS_GENERATOR_HOST: http://{{ .Release.Name }}-audiowaveform-generator-service:5005
+  DATASAUR_EXTENSION_AUTO_LABEL_HOST: http://{{ .Release.Name }}-language-crunch-service:8080
 {{- if .Values.env }}
 {{ .Values.env | toYaml | indent 2 }}
 {{- end }}

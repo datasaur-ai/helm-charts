@@ -1,0 +1,38 @@
+{{- if .Values.services.languageCrunch.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-language-crunch-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-language-crunch
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-language-crunch
+  name: {{ .Release.Name }}-language-crunch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-language-crunch
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-language-crunch
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/datasaur-intelligence/languagecrunch:v-1-5-0
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-language-crunch
+
+{{- end -}}
