@@ -13,6 +13,11 @@ data:
   PRESIDIO_ANALYZER_ENDPOINT: http://{{ .Release.Name }}-presidio-analyzer-service:3000/analyze
   WAVEFORM_PEAKS_GENERATOR_HOST: http://{{ .Release.Name }}-audiowaveform-generator-service:5005
   DATASAUR_EXTENSION_AUTO_LABEL_HOST: http://{{ .Release.Name }}-language-crunch-service:8080
+  DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_NER_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/ner
+  DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_POS_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/pos
+  DATASAUR_EXTENSION_AUTO_LABEL_NLTK_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/default/pos
+  DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_NER_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.ner
+  DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_POS_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.pos
 {{- if .Values.env }}
 {{ .Values.env | toYaml | indent 2 }}
 {{- end }}

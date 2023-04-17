@@ -1,0 +1,41 @@
+{{- if .Values.services.jslServer.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-jsl-server-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-jsl-server
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-jsl-server
+  name: {{ .Release.Name }}-jsl-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-jsl-server
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-jsl-server
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/datasaur-intelligence/jsl-server:v-1-5-0
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-jsl-server
+          envFrom:
+            - configMapRef:
+                name: intelligence-env
+
+{{- end -}}
