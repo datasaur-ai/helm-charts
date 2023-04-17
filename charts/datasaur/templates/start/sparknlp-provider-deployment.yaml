@@ -1,0 +1,41 @@
+{{- if .Values.services.sparknlpProvider.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-sparknlp-provider-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-sparknlp-provider
+  ports:
+    - protocol: TCP
+      port: 9091
+      targetPort: 9091
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-sparknlp-provider
+  name: {{ .Release.Name }}-sparknlp-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-sparknlp-provider
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-sparknlp-provider
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/datasaur-intelligence/sparknlp-provider:v-1-5-0
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-sparknlp-provider
+          envFrom:
+            - configMapRef:
+                name: intelligence-env
+
+{{- end -}}

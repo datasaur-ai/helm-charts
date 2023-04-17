@@ -1,0 +1,41 @@
+{{- if .Values.services.coreNlp.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-nltk-provider-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-nltk-provider
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-nltk-provider
+  name: {{ .Release.Name }}-nltk-provider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-nltk-provider
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-nltk-provider
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/datasaur-intelligence/nltk-provider:v-1-5-0
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-nltk-provider
+          envFrom:
+            - configMapRef:
+                name: intelligence-env
+
+{{- end -}}

@@ -12,7 +12,22 @@ data:
   LANGUAGE_TOOL_SERVICE_ENDPOINT: http://{{ .Release.Name }}-language-tool-service:8010/v2/check
   PRESIDIO_ANALYZER_ENDPOINT: http://{{ .Release.Name }}-presidio-analyzer-service:3000/analyze
   WAVEFORM_PEAKS_GENERATOR_HOST: http://{{ .Release.Name }}-audiowaveform-generator-service:5005
+{{- if .Values.services.languageCrunch.enabled }}
   DATASAUR_EXTENSION_AUTO_LABEL_HOST: http://{{ .Release.Name }}-language-crunch-service:8080
+  ENABLE_SPACY_AUTO_LABEL: "true"
+{{- end }}
+{{- if .Values.services.coreNlp.enabled }}
+  DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_NER_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/ner
+  DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_POS_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/pos
+  DATASAUR_EXTENSION_AUTO_LABEL_NLTK_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/default/pos
+  ENABLE_NLTK_AUTO_LABEL: "true"
+  ENABLE_CORENLP_AUTO_LABEL: "true"
+{{- end }}
+{{- if .Values.services.sparknlpProvider.enabled }}
+  DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_NER_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.ner
+  DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_POS_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.pos
+  ENABLE_SPARKNLP_AUTO_LABEL: "true"
+{{- end }}
 {{- if .Values.env }}
 {{ .Values.env | toYaml | indent 2 }}
 {{- end }}
