@@ -1,0 +1,41 @@
+{{- if .Values.services.coreNlp.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-core-nlp-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-core-nlp
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-core-nlp
+  name: {{ .Release.Name }}-core-nlp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core-nlp
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-core-nlp
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}nlpbox/corenlp:2021-04-18
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-core-nlp
+          envFrom:
+            - configMapRef:
+                name: intelligence-env
+
+{{- end -}}
