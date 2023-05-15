@@ -20,9 +20,26 @@ spec:
         - {{ .Values.ingress.host }}
       secretName: {{ .Release.Name }}-datasaur-tls
   rules:
-    # - host: {{ .Values.ingress.host }}
-    - http:
+    - host: {{ .Values.ingress.host }}
+      http:
         paths:
+{{- if .Values.services.urlInspector.proxy }}
+          - path: /(api/url-inspector|api/static/serve-private|api/static/proxy/upload)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-url-inspector-service
+                port:
+                  number: 8080
+{{- else }}
+          - path: /(api/url-inspector|api/static/serve-private)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-url-inspector-service
+                port:
+                  number: 8080
+{{- end }}
           - path: /(api|admin|graphql|auth|export)(.*)
             pathType: Prefix
             backend:

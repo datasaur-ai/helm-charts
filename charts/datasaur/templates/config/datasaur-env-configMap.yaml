@@ -12,6 +12,18 @@ data:
   LANGUAGE_TOOL_SERVICE_ENDPOINT: http://{{ .Release.Name }}-language-tool-service:8010/v2/check
   PRESIDIO_ANALYZER_ENDPOINT: http://{{ .Release.Name }}-presidio-analyzer-service:3000/analyze
   WAVEFORM_PEAKS_GENERATOR_HOST: http://{{ .Release.Name }}-audiowaveform-generator-service:5005
+  URL_INSPECTOR_INGRESS_URL: https://{{ .Values.ingress.host }}
+  URL_INSPECTOR_INGRESS_HOST: {{ .Values.ingress.host }}
+  MAX_TOKENS_PER_SENTENCE: "3000"
+{{- if .Values.services.urlInspector.proxy }}
+  ENABLE_PROJECT_CREATION_WITH_PROXY: "true"
+  SESSION_DOMAIN: {{ .Values.ingress.host }}
+  UPLOAD_FILE_PROXY_URL: {{ .Values.ingress.host }}/api/static/proxy/upload
+  MAX_DOCUMENT_FILE_SIZE: "52428800"
+  MAX_AUDIO_FILE_SIZE: "{{ div .Values.services.urlInspector.resources.limits.memory 4 }}"
+  MAX_IMAGE_FILE_SIZE: "{{ div .Values.services.urlInspector.resources.limits.memory 4 }}"
+  MAX_REQUEST_SIZE: "{{ div (mul .Values.services.urlInspector.resources.limits.memory 3) 4 }}"
+{{- end }}
 {{- if .Values.services.languageCrunch.enabled }}
   DATASAUR_EXTENSION_AUTO_LABEL_HOST: http://{{ .Release.Name }}-language-crunch-service:8080
   ENABLE_SPACY_AUTO_LABEL: "true"

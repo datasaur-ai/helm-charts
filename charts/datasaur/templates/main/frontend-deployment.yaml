@@ -47,6 +47,11 @@ spec:
                 name: datasaur-env
             - secretRef:
                 name: datasaur-secret
+          env:
+            - name: APP_URL
+              value: https://$(HOST)
+            - name: ASSETS_URL
+              value: https://$(HOST)
           {{- if not .Values.services.frontend.resources.auto }}
           resources:
             limits: 

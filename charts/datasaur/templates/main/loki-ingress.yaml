@@ -25,8 +25,8 @@ spec:
         - {{ .Values.ingress.host }}
       secretName: {{ .Release.Name }}-datasaur-tls
   rules:
-    # - host: {{ .Values.ingress.host }}
-    - http:
+    - host: {{ .Values.ingress.host }}
+      http:
         paths:
           - path: /loki
             pathType: Prefix

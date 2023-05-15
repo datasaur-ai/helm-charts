@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-backend-service
+  name: {{ .Release.Name }}-url-inspector-service
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-backend
+    app: {{ .Release.Name }}-url-inspector
   ports:
     - protocol: TCP
       port: 8080
@@ -15,21 +15,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-backend
-  name: {{ .Release.Name }}-backend
+    app: {{ .Release.Name }}-url-inspector
+  name: {{ .Release.Name }}-url-inspector
 spec:
-  {{- if not .Values.services.backend.autoscaling.enabled }}
-  replicas: {{ .Values.services.backend.replicas }}
+  {{- if not .Values.services.urlInspector.autoscaling.enabled }}
+  replicas: {{ .Values.services.urlInspector.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-backend
+      app: {{ .Release.Name }}-url-inspector
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        app: {{ .Release.Name }}-backend
+        app: {{ .Release.Name }}-url-inspector
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       {{- if .Values.files }}
@@ -45,7 +45,7 @@ spec:
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          name: {{ .Release.Name }}-backend
+          name: {{ .Release.Name }}-url-inspector
           envFrom:
             - configMapRef:
                 name: datasaur-env
@@ -56,6 +56,10 @@ spec:
               value: https://$(HOST)
             - name: ASSETS_URL
               value: https://$(HOST)
+            - name: RATE_LIMIT_MAX
+              value: "50"
+            - name: RATE_LIMIT_UPLOAD_PROXY
+              value: "10000"
           {{- if .Values.files }}
           volumeMounts:
           {{- $relname := .Release.Name -}}
@@ -65,14 +69,14 @@ spec:
               subPath: {{ .name }}
           {{- end }}
           {{- end }}
-          {{- if not .Values.services.backend.resources.auto }}
+          {{- if not .Values.services.urlInspector.resources.auto }}
           resources:
             limits: 
-              cpu: {{ .Values.services.backend.resources.limits.cpu }}
-              memory: {{ .Values.services.backend.resources.limits.memory }}
+              cpu: {{ .Values.services.urlInspector.resources.limits.cpu }}
+              memory: {{ .Values.services.urlInspector.resources.limits.memory }}
             requests: 
-              cpu: {{ .Values.services.backend.resources.requests.cpu }}
-              memory: {{ .Values.services.backend.resources.requests.memory }}
+              cpu: {{ .Values.services.urlInspector.resources.requests.cpu }}
+              memory: {{ .Values.services.urlInspector.resources.requests.memory }}
           {{- end }}
           livenessProbe:
             exec:
@@ -96,36 +100,36 @@ spec:
             failureThreshold: 30
             periodSeconds: 5
             timeoutSeconds: 2
-{{- if .Values.services.backend.autoscaling.enabled }}
+{{- if .Values.services.urlInspector.autoscaling.enabled }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-backend-autoscaler
+  name: {{ .Release.Name }}-url-inspector-autoscaler
   labels:
-    app: {{ .Release.Name }}-backend-autoscaler
+    app: {{ .Release.Name }}-url-inspector-autoscaler
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Release.Name }}-backend
-  minReplicas: {{ .Values.services.backend.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.services.backend.autoscaling.maxReplicas }}
+    name: {{ .Release.Name }}-url-inspector
+  minReplicas: {{ .Values.services.urlInspector.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.urlInspector.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.services.backend.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.services.urlInspector.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target: 
           type: Utilization
-          averageUtilization: {{ .Values.services.backend.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.urlInspector.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if .Values.services.backend.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .Values.services.urlInspector.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target: 
           type: Utilization
-          averageUtilization: {{ .Values.services.backend.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.urlInspector.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
