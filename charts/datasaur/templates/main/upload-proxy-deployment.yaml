@@ -1,0 +1,128 @@
+{{- if .Values.services.uploadProxy.host }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-upload-proxy-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-upload-proxy
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-upload-proxy
+  name: {{ .Release.Name }}-upload-proxy
+spec:
+  {{- if not .Values.services.uploadProxy.autoscaling.enabled }}
+  replicas: {{ .Values.services.uploadProxy.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-upload-proxy
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: {{ .Release.Name }}-upload-proxy
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      {{- if .Values.files }}
+      volumes:
+      - configMap:
+          name: {{ .Release.Name }}-mount-file
+        name: {{ .Release.Name }}-mount-file
+      {{- end }}
+      containers:
+{{- if .Values.image.internal }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/backend:{{ .Values.image.dockerTag }}
+{{- else }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
+{{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-upload-proxy
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+          {{- if .Values.files }}
+          volumeMounts:
+          {{- $relname := .Release.Name -}}
+          {{- range .Values.files }}
+            - name: {{ $relname }}-mount-file
+              mountPath: {{ .mountPath }}
+              subPath: {{ .name }}
+          {{- end }}
+          {{- end }}
+          {{- if not .Values.services.uploadProxy.resources.auto }}
+          resources:
+            limits: 
+              cpu: {{ .Values.services.uploadProxy.resources.limits.cpu }}
+              memory: {{ .Values.services.uploadProxy.resources.limits.memory }}
+            requests: 
+              cpu: {{ .Values.services.uploadProxy.resources.requests.cpu }}
+              memory: {{ .Values.services.uploadProxy.resources.requests.memory }}
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+                - wget
+                - http://localhost:8080/api/health
+                - "-q"
+                - "-O"
+                - "-"
+            failureThreshold: 20
+            periodSeconds: 6
+            timeoutSeconds: 2
+          readinessProbe:
+            exec:
+              command:
+                - wget
+                - http://localhost:8080/api/health
+                - "-q"
+                - "-O"
+                - "-"
+            failureThreshold: 30
+            periodSeconds: 5
+            timeoutSeconds: 2
+{{- if .Values.services.uploadProxy.autoscaling.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-upload-proxy-autoscaler
+  labels:
+    app: {{ .Release.Name }}-upload-proxy-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-upload-proxy
+  minReplicas: {{ .Values.services.uploadProxy.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.uploadProxy.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.services.uploadProxy.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target: 
+          type: Utilization
+          averageUtilization: {{ .Values.services.uploadProxy.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.services.uploadProxy.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target: 
+          type: Utilization
+          averageUtilization: {{ .Values.services.uploadProxy.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+{{- end }}

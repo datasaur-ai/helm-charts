@@ -70,6 +70,40 @@ services:
         maxReplicas: 10
         targetCPUUtilizationPercentage: 80
         targetMemoryUtilizationPercentage: 80
+  urlInspector:
+    replicas: 2
+    resources:
+      auto: true
+      requests:
+        cpu: null
+        memory: null
+      limits:
+        cpu: null
+        memory: null
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80
+  uploadProxy:
+    host: null
+    proxyBodySize: "125m"
+    replicas: 2
+    resources:
+      auto: true
+      requests:
+        cpu: null
+        memory: null
+      limits:
+        cpu: null
+        memory: null
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 10
+      targetCPUUtilizationPercentage: 80
+      targetMemoryUtilizationPercentage: 80
   database:
     enabled: false
     resources:
