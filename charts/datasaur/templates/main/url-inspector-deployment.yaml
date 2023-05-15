@@ -51,6 +51,15 @@ spec:
                 name: datasaur-env
             - secretRef:
                 name: datasaur-secret
+          env:
+            - name: APP_URL
+              value: https://$(HOST)
+            - name: ASSETS_URL
+              value: https://$(HOST)
+            - name: RATE_LIMIT_MAX
+              value: "50"
+            - name: RATE_LIMIT_UPLOAD_PROXY
+              value: "10000"
           {{- if .Values.files }}
           volumeMounts:
           {{- $relname := .Release.Name -}}
