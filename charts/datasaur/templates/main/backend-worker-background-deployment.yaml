@@ -1,3 +1,4 @@
+{{- if .Values.services.worker.background.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,7 +51,13 @@ spec:
             - name: ENABLE_MESSAGE_QUEUE_CONSUMER
               value: "true"
             - name: CONSUMED_QUEUES
-              value: background
+              value: {{ .Values.services.worker.background.consume }}
+            - name: RABBITMQ_PREFETCH_COUNT_EXTERNAL
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_ACTION
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_CRITICAL
+              value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_BACKGROUND
               value: "1"
           {{- if .Values.files }}
@@ -138,4 +145,5 @@ spec:
           type: Utilization
           averageUtilization: {{ .Values.services.worker.background.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
+{{- end }}
 {{- end }}

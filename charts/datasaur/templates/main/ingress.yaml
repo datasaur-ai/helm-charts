@@ -23,6 +23,15 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
+{{- if .Values.services.urlInspector.proxy }}
+          - path: /(api/url-inspector|api/static/serve-private|api/static/proxy/upload)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-url-inspector-service
+                port:
+                  number: 8080
+{{- else }}
           - path: /(api/url-inspector|api/static/serve-private)(.*)
             pathType: Prefix
             backend:
@@ -30,6 +39,7 @@ spec:
                 name: {{ .Release.Name }}-url-inspector-service
                 port:
                   number: 8080
+{{- end }}
           - path: /(api|admin|graphql|auth|export)(.*)
             pathType: Prefix
             backend:
@@ -44,15 +54,3 @@ spec:
                 name: {{ .Release.Name }}-frontend-service
                 port:
                   number: 3080
-{{- if .Values.services.uploadProxy.host }}
-    - host: {{ .Values.services.uploadProxy.host }}
-      http:
-        paths:
-          - path: /api/static/proxy/upload(.*)
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-upload-proxy-service
-                port:
-                  number: 8080
-{{- end }}
