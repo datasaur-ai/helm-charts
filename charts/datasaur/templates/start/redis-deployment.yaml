@@ -30,7 +30,7 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
-        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}redis:3.2
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}redis:7.0.7
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Release.Name }}-redis
 {{- end -}}
