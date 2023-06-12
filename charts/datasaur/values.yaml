@@ -301,12 +301,26 @@ loki:
   auth:
     username: null
     password: null
+
   grafana:
     enabled: false
     grafana.ini:
       server:
         root_url: "%(protocol)s://%(domain)s/grafana/"
         serve_from_sub_path: true
+      smtp:
+        enabled: false
+        ## Uncomment config below to configure SMTP (https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#smtp)
+        # host: <smtp_host>:<smtp_port>
+        # user: null
+        # password: null
+        # cert_file: null
+        # key_file: null
+        # skip_verify: false
+        # from_address: admin@grafana.localhost
+        # from_name: Grafana
+        # ehlo_identity: grafana
+        # startTLS_policy: null (options: "OpportunisticStartTLS", "MandatoryStartTLS", "NoStartTLS")
     extraConfigmapMounts:
       - name: grafana-alert-provisioning
         mountPath: /etc/grafana/provisioning/alerting
@@ -315,6 +329,7 @@ loki:
         readOnly: true
     image:
       tag: 9.5.2
+
   promtail:
     config:
       logLevel: info
