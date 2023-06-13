@@ -162,145 +162,42 @@ jobs:
 
 loki:
   enabled: true
-  alerting:
-    contactPoints.yaml: |
-      apiVersion: 1
-
-      contactPoints:
-        - orgId: 1
-          name: cp_1
-          receivers:
-            - uid: webhook_receiver
-              type: webhook
-              settings:
-                url: https://webhook.site/8bb1d771-b0b3-4867-b680-b67471220f43
-                httpMethod: POST
-            - uid: slack_receiver
-              type: slack
-              settings:
-                url: https://hooks.slack.com/services/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
-        - orgId: 1
-          name: cp_2
-          receivers:
-            - uid: webhook_receiver_2
-              type: webhook
-              settings:
-                url: https://webhook.site/8bb1d771-b0b3-4867-b680-b67471220f43
-                httpMethod: POST
-    alertRules.yaml: |
-      apiVersion: 1
-      groups:
-        - orgId: 1
-          name: General
-          folder: Default
-          interval: 10s
-          rules:
-            - uid: d8395a7e-8498-4e85-ab91-d3144f37d90c
-              title: Backend Error Alert
-              condition: C
-              data:
-                - refId: A
-                  queryType: range
-                  relativeTimeRange:
-                    from: 600
-                    to: 0
-                  datasourceUid: P8E80F9AEF21F6940
-                  model:
-                    editorMode: builder
-                    expr: rate({app="datasaur-backend"} |= `error` [$__interval])
-                    hide: false
-                    intervalMs: 1000
-                    legendFormat: ""
-                    maxDataPoints: 43200
-                    queryType: range
-                    refId: A
-                - refId: B
-                  relativeTimeRange:
-                    from: 600
-                    to: 0
-                  datasourceUid: __expr__
-                  model:
-                    conditions:
-                        - evaluator:
-                            params: []
-                            type: gt
-                          operator:
-                            type: and
-                          query:
-                            params:
-                                - B
-                          reducer:
-                            params: []
-                            type: last
-                          type: query
-                    datasource:
-                        type: __expr__
-                        uid: __expr__
-                    expression: A
-                    hide: false
-                    intervalMs: 1000
-                    maxDataPoints: 43200
-                    reducer: mean
-                    refId: B
-                    settings:
-                        mode: dropNN
-                    type: reduce
-                - refId: C
-                  relativeTimeRange:
-                    from: 600
-                    to: 0
-                  datasourceUid: __expr__
-                  model:
-                    conditions:
-                        - evaluator:
-                            params:
-                                - 1
-                            type: gt
-                          operator:
-                            type: and
-                          query:
-                            params:
-                                - C
-                          reducer:
-                            params: []
-                            type: last
-                          type: query
-                    datasource:
-                        type: __expr__
-                        uid: __expr__
-                    expression: B
-                    hide: false
-                    intervalMs: 1000
-                    maxDataPoints: 43200
-                    refId: C
-                    type: threshold
-              noDataState: OK
-              execErrState: Error
-              for: 1m
-              annotations:
-                description: |-
-                    Node: {{ $labels.node_name }}
-                    Pod: {{ $labels.pod }}
-                summary: |-
-                    {{ $labels.alertname }}
-                    {{ $labels.app }} has more than 5 error request in the last 10 minute
-              labels:
-                client: datasaur
-              isPaused: false
-    notification.yaml: |
-      apiVersion: 1
-
-      policies:
-        - orgId: 1
-          receiver: cp_1
-          matchers: 
-            - client = datasaur
-          object_matchers:
-            - ['client', '=', 'datasaur']
+  alerting: null
 
   auth:
     username: null
     password: null
+  
+  loki:
+    config:
+      common:
+        path_prefix: /var/loki
+        replication_factor: 1
+
+      schema_config:
+        configs:
+          - from: "2022-01-11"
+            index:
+              period: 24h
+              prefix: loki_index_
+            store: boltdb-shipper
+            object_store: aws
+            schema: v12
+
+      storage_config:
+        boltdb_shipper:
+          shared_store: s3
+        aws:
+          s3: s3://us-east-1/datasaur-test-bucket
+          access_key_id: AKIA6GZQPKT63SAO5MWM
+          secret_access_key: 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
+          insecure: false
+          s3forcepathstyle: true
+          region: us-east-1
+          bucketnames: datasaur-test-bucket
+
+      compactor:
+        shared_store: s3
 
   grafana:
     enabled: false
@@ -308,19 +205,6 @@ loki:
       server:
         root_url: "%(protocol)s://%(domain)s/grafana/"
         serve_from_sub_path: true
-      smtp:
-        enabled: false
-        ## Uncomment config below to configure SMTP (https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#smtp)
-        # host: <smtp_host>:<smtp_port>
-        # user: null
-        # password: null
-        # cert_file: null
-        # key_file: null
-        # skip_verify: false
-        # from_address: admin@grafana.localhost
-        # from_name: Grafana
-        # ehlo_identity: grafana
-        # startTLS_policy: null (options: "OpportunisticStartTLS", "MandatoryStartTLS", "NoStartTLS")
     extraConfigmapMounts:
       - name: grafana-alert-provisioning
         mountPath: /etc/grafana/provisioning/alerting
