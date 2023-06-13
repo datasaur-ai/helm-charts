@@ -194,7 +194,7 @@ loki:
         - url: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
 
 analytics:
-  enabled: true
+  enabled: false
 
 metabase-mysql:
   primary:
@@ -269,6 +269,7 @@ metabase_importer:
       user: null
       pass: null
       host: null
+      port: 3306
     aws:
       access_key: null
       secret_key: null
@@ -303,7 +304,7 @@ glair_agent:
       secret_access_key: null
     db:
       database: metabase
-      host: "{release_name}-metabase-mysql"
+      host: null
       user: root
       password: null
 
@@ -318,11 +319,5 @@ glair_agent:
   config_template: |
     {
       "cron_expression" : "{{ .Values.config.cron_expression }}",
-      "jobs": [
-        {
-          "job_type": "replicate_with_raw_query",
-          "raw_query": "SELECT NOW() as updated_date",
-          "parquet_location": "s3://glair-qa-datasaur/datasaur/athena/data/datasaur/workforce/datasaur-billy/gsdp_last_update-1.parquet.gz"
-        }
-      ]
+      "jobs": []
     }

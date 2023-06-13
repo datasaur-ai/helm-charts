@@ -32,6 +32,11 @@ spec:
           ESCAPED_REPLACE=$(printf '%s\n' "$AWS_SECRET_KEY" | sed -e 's/[\/&]/\\&/g')
                       
           cd /opt/
+
+          echo "Connecting to database..."
+          ./wait-for-it.sh -t 300 $DB_HOST:$DB_PORT
+
+          echo "Database Connected."
                       
           sed -i "s/AWS_ACCESS_KEY/${AWS_ACCESS_KEY}/g" dump.sql
           sed -i "s/AWS_SECRET_KEY/${ESCAPED_REPLACE}/g" dump.sql
@@ -41,7 +46,7 @@ spec:
           sed -i "s/datasaur_datasaur_workforce/{{ .Values.metabase_importer.secret.aws.glue_catalog_name }}/g" dump.sql
 
           echo "Importing MySQL Database..."
-          mysql -h ${DB_HOST} -u ${DB_USER} --password=$DB_PASS $DB_NAME < dump.sql            
+          mysql -h ${DB_HOST} --port=${DB_PORT} -u ${DB_USER} --password=$DB_PASS $DB_NAME < dump.sql            
           
           echo "Import Database Done..."
         envFrom:
