@@ -31,7 +31,11 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
+{{ if .Values.dockerHub.enabled }}
+        - image: thecodingmachine/gotenberg:6
+{{- else -}}
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}thecodingmachine/gotenberg:6
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- end -}}
           name: {{ .Release.Name }}-document-converter
 {{- end -}}

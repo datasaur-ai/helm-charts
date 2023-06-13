@@ -38,8 +38,12 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
+{{ if .Values.dockerHub.enabled }}
+        - image: rabbitmq:3.10.20-management
+{{- else -}}
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}rabbitmq:3.10.20-management
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- end -}}
           name: {{ .Release.Name }}-rabbitmq
           envFrom:
             - configMapRef:
