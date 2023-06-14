@@ -1,9 +1,8 @@
-{{- if .Values.metabase_importer.enabled  }}
+{{- if .Values.metabaseImporter.enabled  }}
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: {{ .Release.Name }}-metabase-importer-{{ randAlphaNum 5 | lower }}
-  namespace: {{ .Values.namespace }}
   annotations:
 spec:
   backoffLimit: 3
@@ -15,13 +14,13 @@ spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
 {{- if .Values.image.internal }}
-      - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/metabase-importer:{{ .Values.image.dockerTag }}
+      - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/backend-on-premise:{{ .Values.image.dockerTag }}
 {{- else }}
-      - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/metabase-importer-on-premise:{{ .Values.image.dockerTag }}
+      - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
 {{- end }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ .Release.Name }}-metabase-importer
-        resources: {{- toYaml .Values.metabase_importer.resources | nindent 12 }}        
+        resources: {{- toYaml .Values.metabaseImporter.resources | nindent 12 }}        
         command: 
         - "/bin/sh"
         - "-c"
@@ -31,10 +30,10 @@ spec:
 
           ESCAPED_REPLACE=$(printf '%s\n' "$AWS_SECRET_KEY" | sed -e 's/[\/&]/\\&/g')
                       
-          cd /opt/
+          cd /usr/src/app
 
           echo "Connecting to database..."
-          ./wait-for-it.sh -t 300 $DB_HOST:$DB_PORT
+          ./scripts/wait-for-it.sh -t 300 $DB_HOST:$DB_PORT
 
           echo "Database Connected."
                       
@@ -42,8 +41,8 @@ spec:
           sed -i "s/AWS_SECRET_KEY/${ESCAPED_REPLACE}/g" dump.sql
           sed -i "s/AWS_S3_BUCKET_NAME/${AWS_S3_BUCKET}/g" dump.sql
           sed -i "s/AWS_REGION/${AWS_REGION}/g" dump.sql
-          sed -i "s/datasaur-workgroup/{{ .Values.metabase_importer.secret.aws.athena_workgroup }}/g" dump.sql
-          sed -i "s/datasaur_datasaur_workforce/{{ .Values.metabase_importer.secret.aws.glue_catalog_name }}/g" dump.sql
+          sed -i "s/datasaur-workgroup/{{ .Values.metabaseImporter.secret.aws.athena_workgroup }}/g" dump.sql
+          sed -i "s/datasaur_datasaur_workforce/{{ .Values.metabaseImporter.secret.aws.glue_catalog_name }}/g" dump.sql
 
           echo "Importing MySQL Database..."
           mysql -h ${DB_HOST} --port=${DB_PORT} -u ${DB_USER} --password=$DB_PASS $DB_NAME < dump.sql            

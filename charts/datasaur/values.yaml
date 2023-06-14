@@ -196,7 +196,7 @@ loki:
 analytics:
   enabled: false
 
-metabase-mysql:
+metabasemysql:
   primary:
     resources:
       requests:
@@ -235,8 +235,8 @@ metabase-mysql:
       pid-file=/opt/bitnami/mysql/tmp/mysqld.pid<root_password>
       expire_logs_days=3
   auth:
-    password: null
-    rootPassword: null
+    password: admin
+    rootPassword: admin
     createDatabase: true
     database: metabase
 
@@ -250,26 +250,20 @@ metabase:
       memory: 800Mi
   database:
     type: mysql
-    connectionURI: "mysql://root:<password>@{{ .Release.Name }}-metabase-mysql:port"
+    connectionURI: "mysql://root:{{ .Values.metabasemysql.auth.rootPassword }}@{{ .Release.Name }}-metabasemysql:3306"
   replicaCount: 1
   clearcache:
     enabled: true
     schedule: "0 */3 * * *"
     secret:
       db_host: null
-      db_name: null
-      db_user: null
-      db_pass: null
+      db_name: metabase
+      db_user: root
+      db_pass: admin
 
-metabase_importer:
+metabaseImporter:
   enabled: true
   secret:
-    db:
-      name: null
-      user: null
-      pass: null
-      host: null
-      port: 3306
     aws:
       access_key: null
       secret_key: null
@@ -285,8 +279,7 @@ metabase_importer:
       cpu: 10m
       memory: 800Mi
 
-glair_agent:
-  namespace: null
+glairAgent:
   config:
     s3_bucket: null
     cron_expression: "0 */3 * * *"

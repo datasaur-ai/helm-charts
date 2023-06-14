@@ -30,7 +30,7 @@ dependencies:
     repository: "https://grafana.github.io/helm-charts"
     condition: loki.enabled
   - name: "mysql"
-    alias: "metabase-mysql"
+    alias: "metabasemysql"
     version: 9.10.1
     repository: "https://charts.bitnami.com/bitnami"
     condition: analytics.enabled
@@ -40,7 +40,7 @@ dependencies:
     repository: "https://glair-chart.s3-ap-southeast-1.amazonaws.com"
     condition: analytics.enabled
   - name: "analytics-glair-agent"
-    alias: "glair_agent"
+    alias: "glairAgent"
     version: 1.0.0
     repository: "https://glair-chart.s3-ap-southeast-1.amazonaws.com"
     condition: analytics.enabled
