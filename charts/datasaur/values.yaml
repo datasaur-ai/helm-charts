@@ -167,37 +167,6 @@ loki:
   auth:
     username: null
     password: null
-  
-  loki:
-    config:
-      common:
-        path_prefix: /var/loki
-        replication_factor: 1
-
-      schema_config:
-        configs:
-          - from: "2022-01-11"
-            index:
-              period: 24h
-              prefix: loki_index_
-            store: boltdb-shipper
-            object_store: aws
-            schema: v12
-
-      storage_config:
-        boltdb_shipper:
-          shared_store: s3
-        aws:
-          s3: s3://us-east-1/datasaur-test-bucket
-          access_key_id: AKIA6GZQPKT63SAO5MWM
-          secret_access_key: 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
-          insecure: false
-          s3forcepathstyle: true
-          region: us-east-1
-          bucketnames: datasaur-test-bucket
-
-      compactor:
-        shared_store: s3
 
   grafana:
     enabled: false
