@@ -154,6 +154,8 @@ imageCredentials:
 
 ingress:
   host: null
+  uploadProxyHost: null
+  sessionDomain: null
   proxyBodySize: 125m
 
 files: {}
@@ -163,16 +165,27 @@ jobs:
 
 loki:
   enabled: true
+  alerting: null
+
   auth:
     username: null
     password: null
+
   grafana:
     enabled: false
     grafana.ini:
       server:
-        domain: "{{ .Values.ingress.host }}"
-        root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+        root_url: "%(protocol)s://%(domain)s/grafana/"
         serve_from_sub_path: true
+    extraConfigmapMounts:
+      - name: grafana-alert-provisioning
+        mountPath: /etc/grafana/provisioning/alerting
+        configMap: grafana-alert-provisioning
+        subPath: ""
+        readOnly: true
+    image:
+      tag: 9.5.2
+
   promtail:
     config:
       logLevel: info

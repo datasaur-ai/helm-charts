@@ -1,0 +1,22 @@
+{{- if .Values.ingress.uploadProxyHost }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-upload-proxy-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1$2
+    nginx.ingress.kubernetes.io/proxy-body-size: "{{ .Values.ingress.proxyBodySize }}"
+spec:
+  rules:
+    - host: {{ .Values.ingress.uploadProxyHost }}
+      http:
+        paths:
+          - path: /(api/static/proxy/upload)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-url-inspector-service
+                port:
+                  number: 8080
+{{- end }}

@@ -17,8 +17,8 @@ data:
   MAX_TOKENS_PER_SENTENCE: "3000"
 {{- if .Values.services.urlInspector.proxy }}
   ENABLE_PROJECT_CREATION_WITH_PROXY: "true"
-  SESSION_DOMAIN: {{ .Values.ingress.host }}
-  UPLOAD_FILE_PROXY_URL: https://{{ .Values.ingress.host }}/api/static/proxy/upload
+  SESSION_DOMAIN: {{ .Values.ingress.sessionDomain }}
+  UPLOAD_FILE_PROXY_URL: https://{{ if .Values.ingress.uploadProxyHost }}{{ .Values.ingress.uploadProxyHost }}{{ else }}{{ .Values.ingress.host }}{{ end }}/api/static/proxy/upload
   MAX_DOCUMENT_FILE_SIZE: "52428800"
   MAX_AUDIO_FILE_SIZE: "{{ div .Values.services.urlInspector.resources.limits.memory 4 }}"
   MAX_IMAGE_FILE_SIZE: "{{ div .Values.services.urlInspector.resources.limits.memory 4 }}"

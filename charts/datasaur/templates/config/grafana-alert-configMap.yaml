@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-alert-provisioning
+data:
+{{- if .Values.loki.alerting }}
+{{ .Values.loki.alerting | toYaml | indent 1 }}
+{{- else }}
+  provision: |
+    null
+{{- end }}
