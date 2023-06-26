@@ -28,6 +28,11 @@ data:
   DATASAUR_EXTENSION_AUTO_LABEL_HOST: http://{{ .Release.Name }}-language-crunch-service:8080
   ENABLE_SPACY_AUTO_LABEL: "true"
 {{- end }}
+{{- if .Values.analytics.enabled }}
+  ENABLE_GLAIR_ANALYTICS: "true"
+  ENABLE_NEW_ANALYTICS: "true"
+  METABASE_BASE_URL: http://{{ .Release.Name }}-metabase
+{{- end }}
 {{- if .Values.services.coreNlp.enabled }}
   DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_NER_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/ner
   DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_POS_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/pos
