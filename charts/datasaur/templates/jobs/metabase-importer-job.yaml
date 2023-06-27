@@ -33,7 +33,7 @@ spec:
           cd /usr/src/analytics
 
           echo "Connecting to database..."
-          ./scripts/wait-for-it.sh -t 300 $DB_HOST:$DB_PORT
+          ../app/scripts/wait-for-it.sh -t 300 $DB_HOST:$DB_PORT
 
           echo "Database Connected."
                       
