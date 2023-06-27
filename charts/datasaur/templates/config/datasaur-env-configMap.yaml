@@ -31,6 +31,7 @@ data:
 {{- if .Values.analytics.enabled }}
   ENABLE_GLAIR_ANALYTICS: "true"
   ENABLE_NEW_ANALYTICS: "true"
+  ENABLE_CUSTOM_REPORT_BUILDER: "true"
   METABASE_BASE_URL: http://{{ .Release.Name }}-metabase
 {{- end }}
 {{- if .Values.services.coreNlp.enabled }}
