@@ -2,8 +2,39 @@ apiVersion: v1
 entries:
   datasaur:
   - apiVersion: v2
+    appVersion: '>=6.18.0'
+    created: "2023-07-06T17:57:12.006434164+07:00"
+    dependencies:
+    - alias: loki
+      condition: loki.enabled
+      name: loki-stack
+      repository: https://grafana.github.io/helm-charts
+      version: 2.8.9
+    - alias: metabasemysql
+      condition: analytics.enabled
+      name: mysql
+      repository: https://charts.bitnami.com/bitnami
+      version: 9.10.1
+    - alias: metabase
+      condition: analytics.enabled
+      name: metabase
+      repository: https://glair-chart.s3-ap-southeast-1.amazonaws.com
+      version: 0.13.4
+    - alias: glairAgent
+      condition: analytics.enabled
+      name: analytics-glair-agent
+      repository: https://glair-chart.s3-ap-southeast-1.amazonaws.com
+      version: 1.0.0
+    description: A Helm chart for Datasaur VPC installation
+    digest: c8afd7a49dbaacab82cea27ec19bd4099c59f312e757c38c01733adef53052af
+    name: datasaur
+    type: application
+    urls:
+    - https://datasaur-ai.github.io/helm-charts/datasaur-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.947349197+07:00"
+    created: "2023-07-06T17:57:11.994722943+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -19,7 +50,7 @@ entries:
     version: 1.4.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.935640104+07:00"
+    created: "2023-07-06T17:57:11.984969437+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -35,7 +66,7 @@ entries:
     version: 1.3.1
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.925313578+07:00"
+    created: "2023-07-06T17:57:11.975116965+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -51,7 +82,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.91428107+07:00"
+    created: "2023-07-06T17:57:11.966498235+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -67,7 +98,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.902770227+07:00"
+    created: "2023-07-06T17:57:11.957000905+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -83,7 +114,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.89212993+07:00"
+    created: "2023-07-06T17:57:11.947490795+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -99,7 +130,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.879728874+07:00"
+    created: "2023-07-06T17:57:11.93772304+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -115,7 +146,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2023-06-16T11:05:55.865817996+07:00"
+    created: "2023-07-06T17:57:11.928595798+07:00"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -129,4 +160,4 @@ entries:
     urls:
     - https://datasaur-ai.github.io/helm-charts/datasaur-1.1.0.tgz
     version: 1.1.0
-generated: "2023-06-16T11:05:55.853551527+07:00"
+generated: "2023-07-06T17:57:11.917724905+07:00"
