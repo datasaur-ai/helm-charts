@@ -33,7 +33,7 @@ data:
   ENABLE_NEW_ANALYTICS: "true"
   ENABLE_CUSTOM_REPORT_BUILDER: "true"
   METABASE_BASE_URL: http://{{ .Release.Name }}-metabase
-  METABASE_SECRET_KEY: ''
+  METABASE_SECRET_KEY: "{{ .Values.metabase.embedding_key }}"
 {{- end }}
 {{- if .Values.services.coreNlp.enabled }}
   DATASAUR_EXTENSION_AUTO_LABEL_CORENLP_NER_ENDPOINT: http://{{ .Release.Name }}-nltk-provider-service:9090/tag/corenlp/ner

@@ -43,6 +43,7 @@ spec:
           sed -i "s/AWS_REGION/${AWS_REGION}/g" metabase-mysql-dump.sql
           sed -i "s/datasaur-workgroup/{{ .Values.metabaseImporter.secret.aws.athena_workgroup }}/g" metabase-mysql-dump.sql
           sed -i "s/datasaur_datasaur_workforce/{{ .Values.metabaseImporter.secret.aws.glue_catalog_name }}/g" metabase-mysql-dump.sql
+          sed -i "s/'embedding-secret-key',''/'embedding-secret-key','{{ .Values.metabase.embedding_key }}'/g" metabase-mysql-dump.sql
 
           echo "Importing MySQL Database..."
           mysql -h ${DB_HOST} --port=${DB_PORT} -u ${DB_USER} --password=$DB_PASS $DB_NAME < metabase-mysql-dump.sql            
