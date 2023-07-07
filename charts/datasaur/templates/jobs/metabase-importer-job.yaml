@@ -1,0 +1,55 @@
+{{- if .Values.metabaseImporter.enabled  }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Release.Name }}-metabase-importer-{{ randAlphaNum 5 | lower }}
+  annotations:
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      name: {{ .Release.Name }}-metabase-importer
+    spec:
+      restartPolicy: OnFailure
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+{{- if .Values.image.internal }}
+      - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/backend-on-premise:{{ .Values.image.dockerTag }}
+{{- else }}
+      - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
+{{- end }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        name: {{ .Release.Name }}-metabase-importer
+        resources: {{- toYaml .Values.metabaseImporter.resources | nindent 12 }}        
+        command: 
+        - "/bin/sh"
+        - "-c"
+        args:
+        - |
+          set -e
+
+          ESCAPED_REPLACE=$(printf '%s\n' "$AWS_SECRET_KEY" | sed -e 's/[\/&]/\\&/g')
+                      
+          cd /usr/src/analytics
+
+          echo "Connecting to database..."
+          ../app/scripts/wait-for-it.sh -t 300 $DB_HOST:$DB_PORT
+
+          echo "Database Connected."
+                      
+          sed -i "s/AWS_ACCESS_KEY/${AWS_ACCESS_KEY}/g" metabase-mysql-dump.sql
+          sed -i "s/AWS_SECRET_KEY/${ESCAPED_REPLACE}/g" metabase-mysql-dump.sql
+          sed -i "s/AWS_S3_BUCKET_NAME/${AWS_S3_BUCKET}/g" metabase-mysql-dump.sql
+          sed -i "s/AWS_REGION/${AWS_REGION}/g" metabase-mysql-dump.sql
+          sed -i "s/datasaur-workgroup/{{ .Values.metabaseImporter.secret.aws.athena_workgroup }}/g" metabase-mysql-dump.sql
+          sed -i "s/datasaur_datasaur_workforce/{{ .Values.metabaseImporter.secret.aws.glue_catalog_name }}/g" metabase-mysql-dump.sql
+          sed -i "s/'embedding-secret-key',''/'embedding-secret-key','{{ .Values.metabase.embedding_key }}'/g" metabase-mysql-dump.sql
+
+          echo "Importing MySQL Database..."
+          mysql -h ${DB_HOST} --port=${DB_PORT} -u ${DB_USER} --password=$DB_PASS $DB_NAME < metabase-mysql-dump.sql            
+          
+          echo "Import Database Done..."
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-metabase-importer-secret
+{{- end }}

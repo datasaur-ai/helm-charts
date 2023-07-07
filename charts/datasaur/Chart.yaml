@@ -29,3 +29,18 @@ dependencies:
     version: 2.8.9
     repository: "https://grafana.github.io/helm-charts"
     condition: loki.enabled
+  - name: "mysql"
+    alias: "metabasemysql"
+    version: 9.10.1
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: analytics.enabled
+  - name: "metabase"
+    alias: "metabase"
+    version: 0.13.4
+    repository: "https://glair-chart.s3-ap-southeast-1.amazonaws.com"
+    condition: analytics.enabled
+  - name: "analytics-glair-agent"
+    alias: "glairAgent"
+    version: 1.0.0
+    repository: "https://glair-chart.s3-ap-southeast-1.amazonaws.com"
+    condition: analytics.enabled
