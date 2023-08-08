@@ -4,7 +4,7 @@ metadata:
   name: grafana-alert-provisioning
 data:
 {{- if .Values.loki.alerting }}
-{{ .Values.loki.alerting | toYaml | indent 1 }}
+{{ tpl ( toYaml .Values.loki.alerting ) . | indent 1 }}
 {{- else }}
   provision: |
     null
