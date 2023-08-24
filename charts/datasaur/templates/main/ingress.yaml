@@ -15,10 +15,17 @@ metadata:
 {{- end }}
 {{- end }}
 spec:
+{{- if .Values.tls.secretName }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.tls.secretName }}
+{{- else }}
   tls:
     - hosts:
         - {{ .Values.ingress.host }}
       secretName: {{ .Release.Name }}-datasaur-tls
+{{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
       http:
