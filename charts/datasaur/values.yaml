@@ -172,6 +172,10 @@ loki:
     username: null
     password: null
 
+  loki:
+    image:
+      tag: 2.8.4
+
   grafana:
     enabled: true
     grafana.ini:
@@ -188,6 +192,8 @@ loki:
       tag: 9.5.2
 
   promtail:
+    image:
+      tag: 2.8.4
     config:
       logLevel: info
       serverPort: 3101
