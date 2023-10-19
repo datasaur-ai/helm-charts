@@ -39,6 +39,9 @@ spec:
                 name: datasaur-env
             - secretRef:
                 name: datasaur-secret
+{{- if .Values.extraEnvsFrom }}
+{{ tpl ( toYaml .Values.extraEnvsFrom ) . | indent 12 }}
+{{- end }}
           env:
             - name: APP_URL
               value: https://$(HOST)
