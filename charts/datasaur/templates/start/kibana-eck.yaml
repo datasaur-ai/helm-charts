@@ -1,0 +1,14 @@
+{{- if .Values.elasticsearch.kibana.enabled }}
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: {{ .Release.Name }}-kibana
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+spec:
+  version: 8.10.4
+  count: 1
+  elasticsearchRef:
+    name: {{ .Release.Name }}-elasticsearch
+{{- end }}

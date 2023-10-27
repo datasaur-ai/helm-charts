@@ -1,0 +1,28 @@
+{{- if .Values.elasticsearch.enabled }}
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: {{ .Release.Name }}-elasticsearch
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+spec:
+  version: 8.10.4
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  nodeSets:
+  - name: master-nodes
+    count: 3
+    config:
+      node.roles: ["master", "data" ,"data_content" ,"data_hot", "data_warm", "data_cold", "data_frozen", "ml", "ingest", "remote_cluster_client", "transform"]
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
+{{- end }}
