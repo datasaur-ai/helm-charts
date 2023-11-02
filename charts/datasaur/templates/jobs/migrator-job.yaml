@@ -14,15 +14,6 @@ spec:
         "helm.sh/hook": post-install
         "helm.sh/hook-weight": "1"
     spec:
-      initContainers:
-        - name: wait-for-mariadb-before-starup
-          image: busybox
-          command:  ["sh", "-c", "until nc -z {{ .Release.Name }}-mariadb-service 3306 > /dev/null; do echo Waiting for mariadb.; sleep 2; done;"]
-{{- if .Values.elasticsearch.enabled }}
-        - name: wait-for-elastic-before-starup
-          image: busybox
-          command:  ["sh", "-c", "until nc -z {{ .Release.Name }}-elasticsearch-es-http 9200 > /dev/null; do echo Waiting for elasticsearch.; sleep 2; done;"]
-{{- end }}
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
 {{- if .Values.image.internal }}
