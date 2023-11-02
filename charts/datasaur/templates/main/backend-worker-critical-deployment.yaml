@@ -5,6 +5,9 @@ metadata:
   labels:
     app: {{ .Release.Name }}-backend-critical-worker
   name: {{ .Release.Name }}-backend-critical-worker
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "5"
 spec:
   {{- if not .Values.services.worker.critical.autoscaling.enabled }}
   replicas: {{ .Values.services.worker.critical.replicas }}
@@ -47,6 +50,13 @@ spec:
               value: https://$(HOST)
             - name: ASSETS_URL
               value: https://$(HOST)
+{{- if .Values.elasticsearch.enabled }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-elasticsearch-es-elastic-user
+                  key: elastic
+{{- end }}
             - name: ENABLE_DOCUMENT_STATISTIC_EXECUTOR
               value: "true"
             - name: ENABLE_DOCUMENT_CONVERSION_EXECUTOR

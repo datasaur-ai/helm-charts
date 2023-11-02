@@ -10,6 +10,9 @@ spec:
     metadata:
       labels:
         app: {{ .Release.Name }}-migrator
+      annotations:
+        "helm.sh/hook": post-install
+        "helm.sh/hook-weight": "1"
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
@@ -26,4 +29,12 @@ spec:
                 name: datasaur-env
             - secretRef:
                 name: datasaur-secret
+{{- if .Values.elasticsearch.enabled }}
+          env:
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-elasticsearch-es-elastic-user
+                  key: elastic
+{{- end }}
       restartPolicy: Never

@@ -15,7 +15,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.8.1
+version: 1.9.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
@@ -26,7 +26,7 @@ appVersion: ">=6.30.0"
 dependencies:
   - name: "loki-stack"
     alias: loki
-    version: 2.9.1
+    version: 2.8.9
     repository: "https://grafana.github.io/helm-charts"
     condition: loki.enabled
   - name: "mysql"
@@ -44,3 +44,8 @@ dependencies:
     version: 1.0.0
     repository: "https://glair-chart.s3-ap-southeast-1.amazonaws.com"
     condition: analytics.enabled
+  - name: "eck-operator"
+    alias: "eckOperator"
+    version: 2.9.0
+    repository: "https://helm.elastic.co"
+    condition: elasticsearch.enabled
