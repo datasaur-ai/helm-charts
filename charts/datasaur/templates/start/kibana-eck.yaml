@@ -11,4 +11,8 @@ spec:
   count: 1
   elasticsearchRef:
     name: {{ .Release.Name }}-elasticsearch
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
 {{- end }}
