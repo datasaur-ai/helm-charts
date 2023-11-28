@@ -17,6 +17,9 @@ data:
   MAX_TOKENS_PER_SENTENCE: "3000"
 {{- if .Values.elasticsearch.enabled }}
   ELASTICSEARCH_NODE: http://{{ .Release.Name }}-elasticsearch-es-http:9200
+  ENABLE_ANALYTICS: "true"
+  DEFAULT_ANALYTICS_DATASOURCE: ELASTIC
+  DEFAULT_ANALYTICS_CRB_DATASOURCE: ELASTIC
 {{- end }}
 {{- if .Values.services.urlInspector.proxy }}
   ENABLE_PROJECT_CREATION_WITH_PROXY: "true"
