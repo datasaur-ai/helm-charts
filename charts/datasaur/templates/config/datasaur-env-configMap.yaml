@@ -18,6 +18,7 @@ data:
 {{- if .Values.elasticsearch.enabled }}
   ELASTICSEARCH_NODE: http://{{ .Release.Name }}-elasticsearch-es-http:9200
   ENABLE_ANALYTICS: "true"
+  ENABLE_CUSTOM_REPORT_BUILDER: "true"
   DEFAULT_ANALYTICS_DATASOURCE: ELASTIC
   DEFAULT_ANALYTICS_CRB_DATASOURCE: ELASTIC
 {{- end }}
