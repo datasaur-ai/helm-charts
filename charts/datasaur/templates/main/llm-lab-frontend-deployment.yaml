@@ -1,0 +1,70 @@
+{{- if .Values.ingress.llm.host }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-llm-lab-frontend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-llm-lab-frontend
+  ports:
+    - protocol: TCP
+      port: 7080
+      targetPort: 7080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-llm-lab-frontend
+  name: {{ .Release.Name }}-llm-lab-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-llm-lab-frontend
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: {{ .Release.Name }}-llm-lab-frontend
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+{{- if .Values.image.internal }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/llm-lab-frontend:{{ .Values.image.dockerTag }}
+{{- else }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/llm-lab-frontend-on-premise:{{ .Values.image.dockerTag }}
+{{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-llm-lab-frontend
+          volumeMounts:
+            - name: frontend-env
+              mountPath: /usr/src/app/.env
+              subPath: .env
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+          env:
+            - name: ASSETS_URL
+              value: https://$(HOST)
+          {{- if not .Values.services.llmLabFrontend.resources.auto }}
+          resources:
+            limits: 
+              cpu: {{ .Values.services.llmLabFrontend.resources.limits.cpu }}
+              memory: {{ .Values.services.llmLabFrontend.resources.limits.memory }}
+            requests: 
+              cpu: {{ .Values.services.llmLabFrontend.resources.requests.cpu }}
+              memory: {{ .Values.services.llmLabFrontend.resources.requests.memory }}
+          {{- end }}
+      volumes:
+        - name: frontend-env
+          configMap:
+            name: frontend-env
+            items:
+              - key: .env
+                path: .env
+{{- end }}

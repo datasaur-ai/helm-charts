@@ -1,37 +1,37 @@
-{{- if .Values.ingress.host }}
+{{- if .Values.ingress.llm.host }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-datasaur-ingress
+  name: {{ .Release.Name }}-datasaur-llm-lab-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /$1$2
     nginx.ingress.kubernetes.io/proxy-body-size: "{{ .Values.ingress.proxyBodySize }}"
-{{- if .Values.tls.ca }}
+{{- if .Values.llmTls.ca }}
     nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
-    nginx.ingress.kubernetes.io/auth-tls-secret: "{{ .Release.Namespace }}/{{ .Release.Name }}-datasaur-tls-ca"
-    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "{{ .Values.tls.verifyDepth }}"
-{{- if .Values.tls.errorPage }}
-    nginx.ingress.kubernetes.io/auth-tls-error-page: {{ .Values.tls.errorPage }}
+    nginx.ingress.kubernetes.io/auth-tls-secret: "{{ .Release.Namespace }}/{{ .Release.Name }}-datasaur-llm-lab-ca"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "{{ .Values.llmTls.verifyDepth }}"
+{{- if .Values.llmTls.errorPage }}
+    nginx.ingress.kubernetes.io/auth-tls-error-page: {{ .Values.llmTls.errorPage }}
 {{- end }}
 {{- end }}
 {{- if .Values.ingress.annotations }}
 {{ tpl ( toYaml .Values.ingress.annotations ) . | indent 4 }}
 {{- end }}
 spec:
-{{- if .Values.tls.secretName }}
+{{- if .Values.llmTls.secretName }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host }}
-      secretName: {{ .Values.tls.secretName }}
+        - {{ .Values.ingress.llm.host }}
+      secretName: {{ .Values.llmTls.secretName }}
 {{- else }}
   tls:
     - hosts:
-        - {{ .Values.ingress.host }}
-      secretName: {{ .Release.Name }}-datasaur-tls
+        - {{ .Values.ingress.llm.host }}
+      secretName: {{ .Release.Name }}-datasaur-llm-lab-tls
 {{- end }}
   rules:
-    - host: {{ .Values.ingress.host }}
+    - host: {{ .Values.ingress.llm.host }}
       http:
         paths:
 {{- if .Values.services.urlInspector.proxy }}
@@ -62,7 +62,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}-frontend-service
+                name: {{ .Release.Name }}-llm-lab-frontend-service
                 port:
-                  number: 3080
+                  number: 7080
 {{- end }}
