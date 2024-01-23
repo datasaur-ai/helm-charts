@@ -1,37 +1,37 @@
-{{- if .Values.ingress.llm.host }}
+{{- if .Values.ingress.llmLabs.host }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-datasaur-llm-lab-ingress
+  name: {{ .Release.Name }}-datasaur-llm-labs-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: /$1$2
     nginx.ingress.kubernetes.io/proxy-body-size: "{{ .Values.ingress.proxyBodySize }}"
-{{- if .Values.llmTls.ca }}
+{{- if .Values.llmLabsTls.ca }}
     nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
-    nginx.ingress.kubernetes.io/auth-tls-secret: "{{ .Release.Namespace }}/{{ .Release.Name }}-datasaur-llm-lab-ca"
-    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "{{ .Values.llmTls.verifyDepth }}"
-{{- if .Values.llmTls.errorPage }}
-    nginx.ingress.kubernetes.io/auth-tls-error-page: {{ .Values.llmTls.errorPage }}
+    nginx.ingress.kubernetes.io/auth-tls-secret: "{{ .Release.Namespace }}/{{ .Release.Name }}-datasaur-llm-labs-ca"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "{{ .Values.llmLabsTls.verifyDepth }}"
+{{- if .Values.llmLabsTls.errorPage }}
+    nginx.ingress.kubernetes.io/auth-tls-error-page: {{ .Values.llmLabsTls.errorPage }}
 {{- end }}
 {{- end }}
 {{- if .Values.ingress.annotations }}
 {{ tpl ( toYaml .Values.ingress.annotations ) . | indent 4 }}
 {{- end }}
 spec:
-{{- if .Values.llmTls.secretName }}
+{{- if .Values.llmLabsTls.secretName }}
   tls:
     - hosts:
-        - {{ .Values.ingress.llm.host }}
-      secretName: {{ .Values.llmTls.secretName }}
+        - {{ .Values.ingress.llmLabs.host }}
+      secretName: {{ .Values.llmLabsTls.secretName }}
 {{- else }}
   tls:
     - hosts:
-        - {{ .Values.ingress.llm.host }}
-      secretName: {{ .Release.Name }}-datasaur-llm-lab-tls
+        - {{ .Values.ingress.llmLabs.host }}
+      secretName: {{ .Release.Name }}-datasaur-llm-labs-tls
 {{- end }}
   rules:
-    - host: {{ .Values.ingress.llm.host }}
+    - host: {{ .Values.ingress.llmLabs.host }}
       http:
         paths:
 {{- if .Values.services.urlInspector.proxy }}
@@ -62,7 +62,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}-llm-lab-frontend-service
+                name: {{ .Release.Name }}-llm-labs-frontend-service
                 port:
                   number: 7080
 {{- end }}

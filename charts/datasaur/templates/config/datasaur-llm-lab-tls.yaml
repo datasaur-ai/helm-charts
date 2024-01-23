@@ -1,20 +1,20 @@
-{{- if not .Values.llmTls.secretName }}
+{{- if not .Values.llmLabsTls.secretName }}
 apiVersion: v1
 data:
-  tls.crt: {{ .Values.llmTls.cert }}
-  tls.key: {{ .Values.llmTls.key }}
+  tls.crt: {{ .Values.llmLabsTls.cert }}
+  tls.key: {{ .Values.llmLabsTls.key }}
 kind: Secret
 metadata:
-  name: {{ .Release.Name }}-datasaur-llm-lab-tls
+  name: {{ .Release.Name }}-datasaur-llm-labs-tls
 type: kubernetes.io/tls
-{{- if .Values.llmTls.ca }}
+{{- if .Values.llmLabsTls.ca }}
 ---
 apiVersion: v1
 data:
-  ca.crt: {{ .Values.llmTls.ca }}
+  ca.crt: {{ .Values.llmLabsTls.ca }}
 kind: Secret
 metadata:
-  name: {{ .Release.Name }}-datasaur-llm-lab-ca
+  name: {{ .Release.Name }}-datasaur-llm-labs-ca
 type: Opaque
 {{- end }}
 {{- end }}

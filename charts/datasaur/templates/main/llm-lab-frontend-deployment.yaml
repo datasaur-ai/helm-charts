@@ -1,12 +1,12 @@
-{{- if .Values.ingress.llm.host }}
+{{- if .Values.ingress.llmLabs.host }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-llm-lab-frontend-service
+  name: {{ .Release.Name }}-llm-labs-frontend-service
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-llm-lab-frontend
+    app: {{ .Release.Name }}-llm-labs-frontend
   ports:
     - protocol: TCP
       port: 7080
@@ -16,19 +16,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-llm-lab-frontend
-  name: {{ .Release.Name }}-llm-lab-frontend
+    app: {{ .Release.Name }}-llm-labs-frontend
+  name: {{ .Release.Name }}-llm-labs-frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-llm-lab-frontend
+      app: {{ .Release.Name }}-llm-labs-frontend
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        app: {{ .Release.Name }}-llm-lab-frontend
+        app: {{ .Release.Name }}-llm-labs-frontend
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
@@ -38,7 +38,7 @@ spec:
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/llm-lab-frontend-on-premise:{{ .Values.image.dockerTag }}
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          name: {{ .Release.Name }}-llm-lab-frontend
+          name: {{ .Release.Name }}-llm-labs-frontend
           volumeMounts:
             - name: frontend-env
               mountPath: /usr/src/app/.env
@@ -51,14 +51,14 @@ spec:
           env:
             - name: ASSETS_URL
               value: https://$(HOST)
-          {{- if not .Values.services.llmLabFrontend.resources.auto }}
+          {{- if not .Values.services.llmLabsFrontend.resources.auto }}
           resources:
             limits: 
-              cpu: {{ .Values.services.llmLabFrontend.resources.limits.cpu }}
-              memory: {{ .Values.services.llmLabFrontend.resources.limits.memory }}
+              cpu: {{ .Values.services.llmLabsFrontend.resources.limits.cpu }}
+              memory: {{ .Values.services.llmLabsFrontend.resources.limits.memory }}
             requests: 
-              cpu: {{ .Values.services.llmLabFrontend.resources.requests.cpu }}
-              memory: {{ .Values.services.llmLabFrontend.resources.requests.memory }}
+              cpu: {{ .Values.services.llmLabsFrontend.resources.requests.cpu }}
+              memory: {{ .Values.services.llmLabsFrontend.resources.requests.memory }}
           {{- end }}
       volumes:
         - name: frontend-env
