@@ -50,7 +50,7 @@ spec:
                 name: datasaur-secret
           env:
             - name: ASSETS_URL
-              value: https://$(HOST)
+              value: https://$(LLM_LABS_HOST)
           {{- if not .Values.services.llmLabsFrontend.resources.auto }}
           resources:
             limits: 
