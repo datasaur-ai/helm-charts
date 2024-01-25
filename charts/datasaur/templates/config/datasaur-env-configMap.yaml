@@ -22,6 +22,9 @@ data:
   DEFAULT_ANALYTICS_DATASOURCE: ELASTIC
   DEFAULT_ANALYTICS_CRB_DATASOURCE: ELASTIC
 {{- end }}
+{{- if .Values.ingress.llmLabs.host }}
+  ELASTICSEARCH_VECTOR_DB_NODE: http://{{ .Release.Name }}-elasticsearch-es-http:9200
+{{- end }}
 {{- if .Values.services.urlInspector.proxy }}
   ENABLE_PROJECT_CREATION_WITH_PROXY: "true"
   SESSION_DOMAIN: {{ .Values.ingress.sessionDomain }}

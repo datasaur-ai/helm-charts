@@ -57,6 +57,13 @@ spec:
                   name: {{ .Release.Name }}-elasticsearch-es-elastic-user
                   key: elastic
 {{- end }}
+{{- if .Values.ingress.llmLabs.host }}
+            - name: ELASTICSEARCH_VECTOR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-elasticsearch-es-elastic-user
+                  key: elastic
+{{- end }}
             - name: ENABLE_DOCUMENT_STATISTIC_EXECUTOR
               value: "true"
             - name: ENABLE_DOCUMENT_CONVERSION_EXECUTOR

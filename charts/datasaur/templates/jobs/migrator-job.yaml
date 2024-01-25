@@ -29,9 +29,18 @@ spec:
                 name: datasaur-env
             - secretRef:
                 name: datasaur-secret
-{{- if .Values.elasticsearch.enabled }}
+{{- if or .Values.elasticsearch.enabled .Values.ingress.llmLabs.host }}
           env:
+{{- end }}
+{{- if .Values.elasticsearch.enabled }}
             - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-elasticsearch-es-elastic-user
+                  key: elastic
+{{- end }}
+{{- if .Values.ingress.llmLabs.host }}
+            - name: ELASTICSEARCH_VECTOR_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Release.Name }}-elasticsearch-es-elastic-user
