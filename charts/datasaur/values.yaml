@@ -116,6 +116,15 @@ services:
       limits:
         cpu: null
         memory: null
+  llmLabsFrontend:
+    resources:
+      auto: true
+      requests:
+        cpu: null
+        memory: null
+      limits:
+        cpu: null
+        memory: null
   apacheTika:
     enabled: true
   audiowaveformGenerator:
@@ -145,6 +154,14 @@ tls:
   errorPage: null
   secretName: null
 
+llmLabsTls:
+  cert: null
+  key: null
+  ca: null
+  verifyDepth: "1"
+  errorPage: null
+  secretName: null
+
 env: null
 
 secret: null
@@ -155,6 +172,8 @@ imageCredentials:
 
 ingress:
   host: null
+  llmLabs:
+    host: null
   uploadProxyHost: null
   sessionDomain: null
   proxyBodySize: 125m
@@ -329,7 +348,7 @@ glairAgent:
 eckOperator: {}
 
 elasticsearch:
-  enabled: true
+  enabled: false
   kibana:
     enabled: false
   storage: 100Gi

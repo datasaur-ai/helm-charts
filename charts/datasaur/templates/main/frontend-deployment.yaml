@@ -1,3 +1,4 @@
+{{- if .Values.ingress.host }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -68,3 +69,4 @@ spec:
             items:
               - key: .env
                 path: .env
+{{- end }}

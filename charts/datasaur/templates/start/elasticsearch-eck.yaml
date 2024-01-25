@@ -1,4 +1,4 @@
-{{- if .Values.elasticsearch.enabled }}
+{{- if or .Values.elasticsearch.enabled .Values.ingress.llmLabs.host }}
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
