@@ -15,8 +15,8 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-error-page: {{ .Values.llmLabsTls.errorPage }}
 {{- end }}
 {{- end }}
-{{- if .Values.ingress.annotations }}
-{{ tpl ( toYaml .Values.ingress.annotations ) . | indent 4 }}
+{{- if .Values.ingress.llmLabs.annotations }}
+{{ tpl ( toYaml .Values.ingress.llmLabs.annotations ) . | indent 4 }}
 {{- end }}
 spec:
 {{- if .Values.llmLabsTls.secretName }}

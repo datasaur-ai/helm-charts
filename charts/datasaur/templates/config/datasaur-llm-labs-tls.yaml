@@ -1,3 +1,4 @@
+{{- if .Values.ingress.llmLabs.host }}
 {{- if not .Values.llmLabsTls.secretName }}
 apiVersion: v1
 data:
@@ -16,5 +17,6 @@ kind: Secret
 metadata:
   name: {{ .Release.Name }}-datasaur-llm-labs-ca
 type: Opaque
+{{- end }}
 {{- end }}
 {{- end }}

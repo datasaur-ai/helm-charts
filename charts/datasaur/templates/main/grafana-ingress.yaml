@@ -15,11 +15,21 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-error-page: {{ .Values.tls.errorPage }}
 {{- end }}
 {{- end }}
+{{- if .Values.ingress.annotations }}
+{{ tpl ( toYaml .Values.ingress.annotations ) . | indent 4 }}
+{{- end }}
 spec:
+{{- if .Values.tls.secretName }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.tls.secretName }}
+{{- else }}
   tls:
     - hosts:
         - {{ .Values.ingress.host }}
       secretName: {{ .Release.Name }}-datasaur-tls
+{{- end }}
   rules:
     - host: {{ .Values.ingress.host }}
       http:
