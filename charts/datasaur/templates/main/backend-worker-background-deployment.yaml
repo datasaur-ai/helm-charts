@@ -22,8 +22,8 @@ spec:
       labels:
         app: {{ .Release.Name }}-backend-background-worker
     spec:
-{{- if .Values.podIdentity.backendServiceAccount }}
-      serviceAccountName: {{ .Values.podIdentity.backendServiceAccount }}
+{{- if .Values.clusterSettings.backendServiceAccount }}
+      serviceAccountName: {{ .Values.clusterSettings.backendServiceAccount }}
 {{- end }}
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       {{- if .Values.files }}
