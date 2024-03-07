@@ -22,6 +22,9 @@ spec:
       labels:
         app: {{ .Release.Name }}-backend-background-worker
     spec:
+{{- if .Values.clusterSettings.backendServiceAccount }}
+      serviceAccountName: {{ .Values.clusterSettings.backendServiceAccount }}
+{{- end }}
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       {{- if .Values.files }}
       volumes:
