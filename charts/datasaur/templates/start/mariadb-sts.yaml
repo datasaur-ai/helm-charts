@@ -54,6 +54,8 @@ spec:
               value: $(DATABASE_PASSWORD)
             - name: MYSQL_ROOT_PASSWORD
               value: $(DATABASE_PASSWORD)
+            - name: MARIADB_AUTO_UPGRADE
+              value: 1
           {{- if not .Values.services.database.resources.auto }}
           resources:
             limits:
