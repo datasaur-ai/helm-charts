@@ -1,3 +1,4 @@
+{{- if .Values.services.database.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -30,3 +31,4 @@ spec:
             - secretRef:
                 name: datasaur-secret
       restartPolicy: Never
+{{- end }}
