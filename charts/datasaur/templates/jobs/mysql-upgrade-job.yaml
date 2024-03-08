@@ -1,0 +1,34 @@
+{{- if .Values.services.database.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  labels:
+    app: {{ .Release.Name }}-mariadb-upgrader
+  name: {{ .Release.Name }}-mariadb-upgrader
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mariadb-upgrader
+      annotations:
+        "helm.sh/hook": post-install,post-upgrade
+        "helm.sh/hook-weight": "1"
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+{{- if .Values.dockerHub.enabled }}
+        - image: mariadb:10.6.14
+{{- else }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}mariadb:10.6.14
+{{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-mariadb-upgrader
+          command: ['mysql_upgrade', '-uroot', '-p{{ .Values.secret.DATABASE_PASSWORD }}', '--host={{ .Release.Name }}-mariadb-service']
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+      restartPolicy: Never
+{{- end }}
