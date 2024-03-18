@@ -19,7 +19,7 @@ spec:
 {{- if .Values.image.internal }}
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/backend:{{ .Values.image.dockerTag }}
 {{- else }}
-        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}datasaur/backend-on-premise:{{ .Values.image.dockerTag }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}{{ .Values.imageCredentials.prefix | default "datasaur" }}/backend-on-premise:{{ .Values.image.dockerTag }}
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Release.Name }}-backend-migrator
