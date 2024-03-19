@@ -1,0 +1,174 @@
+{{- if and .Values.services.worker.llm-critical.enabled .Values.ingress.llmLabs.host }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-backend-llm-critical-worker
+  name: {{ .Release.Name }}-backend-llm-critical-worker
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+spec:
+  {{- if not .Values.services.worker.llm-critical.autoscaling.enabled }}
+  replicas: {{ .Values.services.worker.llm-critical.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-backend-llm-critical-worker
+  template:
+    metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+      labels:
+        app: {{ .Release.Name }}-backend-llm-critical-worker
+    spec:
+{{- if .Values.clusterSettings.backendServiceAccount }}
+      serviceAccountName: {{ .Values.clusterSettings.backendServiceAccount }}
+{{- end }}
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      {{- if .Values.files }}
+      volumes:
+      - configMap:
+          name: {{ .Release.Name }}-mount-file
+        name: {{ .Release.Name }}-mount-file
+      {{- end }}
+      containers:
+{{- if .Values.image.internal }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/vulcan/backend:{{ .Values.image.dockerTag }}
+{{- else }}
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}{{ .Values.imageCredentials.prefix | default "datasaur" }}/backend-on-premise:{{ .Values.image.dockerTag }}
+{{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-backend-llm-critical-worker
+          envFrom:
+            - configMapRef:
+                name: datasaur-env
+            - secretRef:
+                name: datasaur-secret
+{{- if .Values.extraEnvsFrom }}
+{{ tpl ( toYaml .Values.extraEnvsFrom ) . | indent 12 }}
+{{- end }}
+          env:
+            - name: APP_URL
+              value: https://$(HOST)
+            - name: ASSETS_URL
+              value: https://$(HOST)
+{{- if .Values.elasticsearch.enabled }}
+            - name: ELASTICSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-elasticsearch-es-elastic-user
+                  key: elastic
+{{- end }}
+{{- if .Values.ingress.llmLabs.host }}
+            - name: ELASTICSEARCH_VECTOR_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-elasticsearch-es-elastic-user
+                  key: elastic
+{{- end }}
+            - name: ENABLE_DOCUMENT_STATISTIC_EXECUTOR
+              value: "true"
+            - name: ENABLE_DOCUMENT_CONVERSION_EXECUTOR
+              value: "true"
+            - name: ENABLE_MESSAGE_QUEUE_CONSUMER
+              value: "true"
+            - name: CONSUMED_QUEUES
+              value: {{ .Values.services.worker.llm-critical.consume }}
+            - name: RABBITMQ_PREFETCH_COUNT_EXTERNAL
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_ACTION
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_CRITICAL
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_LLM_CRITICAL
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_BACKGROUND
+              value: "1"
+          {{- if .Values.files }}
+          volumeMounts:
+          {{- $relname := .Release.Name -}}
+          {{- range .Values.files }}
+            - name: {{ $relname }}-mount-file
+              mountPath: {{ .mountPath }}
+              subPath: {{ .name }}
+          {{- end }}
+          {{- end }}
+          {{- if not .Values.services.worker.llm-critical.resources.auto }}
+          resources:
+            limits:
+              cpu: {{ .Values.services.worker.llm-critical.resources.limits.cpu }}
+              memory: {{ .Values.services.worker.llm-critical.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.services.worker.llm-critical.resources.requests.cpu }}
+              memory: {{ .Values.services.worker.llm-critical.resources.requests.memory }}
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+                - wget
+                - http://localhost:8080/api/health
+                - "-q"
+                - "-O"
+                - "-"
+            failureThreshold: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+          readinessProbe:
+            exec:
+              command:
+                - wget
+                - http://localhost:8080/api/health
+                - "-q"
+                - "-O"
+                - "-"
+            failureThreshold: 30
+            periodSeconds: 5
+            timeoutSeconds: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-backend-llm-critical-worker-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-backend-llm-critical-worker
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+{{- if .Values.services.worker.llm-critical.autoscaling.enabled }}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-backend-llm-critical-worker-autoscaler
+  labels:
+    app: {{ .Release.Name }}-backend-llm-critical-worker-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-backend-llm-critical-worker
+  minReplicas: {{ .Values.services.worker.llm-critical.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.worker.llm-critical.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.services.worker.llm-critical.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.services.worker.llm-critical.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.services.worker.llm-critical.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.services.worker.llm-critical.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+{{- end }}
