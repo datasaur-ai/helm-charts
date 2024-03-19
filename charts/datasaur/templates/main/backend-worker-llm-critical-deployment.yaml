@@ -1,26 +1,26 @@
-{{- if and .Values.services.worker.llm-critical.enabled .Values.ingress.llmLabs.host }}
+{{- if and .Values.services.worker.llmCritical.enabled .Values.ingress.llmLabs.host }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-backend-llm-critical-worker
-  name: {{ .Release.Name }}-backend-llm-critical-worker
+    app: {{ .Release.Name }}-backend.llmCritical.worker
+  name: {{ .Release.Name }}-backend.llmCritical.worker
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "5"
 spec:
-  {{- if not .Values.services.worker.llm-critical.autoscaling.enabled }}
-  replicas: {{ .Values.services.worker.llm-critical.replicas }}
+  {{- if not .Values.services.worker.llmCritical.autoscaling.enabled }}
+  replicas: {{ .Values.services.worker.llmCritical.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-backend-llm-critical-worker
+      app: {{ .Release.Name }}-backend.llmCritical.worker
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        app: {{ .Release.Name }}-backend-llm-critical-worker
+        app: {{ .Release.Name }}-backend.llmCritical.worker
     spec:
 {{- if .Values.clusterSettings.backendServiceAccount }}
       serviceAccountName: {{ .Values.clusterSettings.backendServiceAccount }}
@@ -39,7 +39,7 @@ spec:
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}{{ .Values.imageCredentials.prefix | default "datasaur" }}/backend-on-premise:{{ .Values.image.dockerTag }}
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          name: {{ .Release.Name }}-backend-llm-critical-worker
+          name: {{ .Release.Name }}-backend.llmCritical.worker
           envFrom:
             - configMapRef:
                 name: datasaur-env
@@ -74,7 +74,7 @@ spec:
             - name: ENABLE_MESSAGE_QUEUE_CONSUMER
               value: "true"
             - name: CONSUMED_QUEUES
-              value: {{ .Values.services.worker.llm-critical.consume }}
+              value: {{ .Values.services.worker.llmCritical.consume }}
             - name: RABBITMQ_PREFETCH_COUNT_EXTERNAL
               value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_ACTION
@@ -94,14 +94,14 @@ spec:
               subPath: {{ .name }}
           {{- end }}
           {{- end }}
-          {{- if not .Values.services.worker.llm-critical.resources.auto }}
+          {{- if not .Values.services.worker.llmCritical.resources.auto }}
           resources:
             limits:
-              cpu: {{ .Values.services.worker.llm-critical.resources.limits.cpu }}
-              memory: {{ .Values.services.worker.llm-critical.resources.limits.memory }}
+              cpu: {{ .Values.services.worker.llmCritical.resources.limits.cpu }}
+              memory: {{ .Values.services.worker.llmCritical.resources.limits.memory }}
             requests:
-              cpu: {{ .Values.services.worker.llm-critical.resources.requests.cpu }}
-              memory: {{ .Values.services.worker.llm-critical.resources.requests.memory }}
+              cpu: {{ .Values.services.worker.llmCritical.resources.requests.cpu }}
+              memory: {{ .Values.services.worker.llmCritical.resources.requests.memory }}
           {{- end }}
           livenessProbe:
             exec:
@@ -129,46 +129,46 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-backend-llm-critical-worker-service
+  name: {{ .Release.Name }}-backend.llmCritical.worker-service
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-backend-llm-critical-worker
+    app: {{ .Release.Name }}-backend.llmCritical.worker
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-{{- if .Values.services.worker.llm-critical.autoscaling.enabled }}
+{{- if .Values.services.worker.llmCritical.autoscaling.enabled }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-backend-llm-critical-worker-autoscaler
+  name: {{ .Release.Name }}-backend.llmCritical.worker-autoscaler
   labels:
-    app: {{ .Release.Name }}-backend-llm-critical-worker-autoscaler
+    app: {{ .Release.Name }}-backend.llmCritical.worker-autoscaler
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Release.Name }}-backend-llm-critical-worker
-  minReplicas: {{ .Values.services.worker.llm-critical.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.services.worker.llm-critical.autoscaling.maxReplicas }}
+    name: {{ .Release.Name }}-backend.llmCritical.worker
+  minReplicas: {{ .Values.services.worker.llmCritical.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.worker.llmCritical.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.services.worker.llm-critical.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.services.worker.llmCritical.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.services.worker.llm-critical.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.worker.llmCritical.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if .Values.services.worker.llm-critical.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .Values.services.worker.llmCritical.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.services.worker.llm-critical.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.worker.llmCritical.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
 {{- end }}
