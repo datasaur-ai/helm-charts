@@ -1,0 +1,40 @@
+{{- if .Values.services.datasaurAssist.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-datasaur-assist-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-datasaur-assist
+  ports:
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-datasaur-assist
+  name: {{ .Release.Name }}-datasaur-assist
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-datasaur-assist
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-datasaur-assist
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry}}/{{ end }}vulcan-ai/datasaur-assist/datasaur-assist:v1.0.1
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-datasaur-assist
+          envFrom:
+            - configMapRef:
+                name: intelligence-env
+{{- end -}}

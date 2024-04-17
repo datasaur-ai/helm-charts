@@ -7,3 +7,19 @@ data:
   NLTK_PROVIDER_PORT: '9090'
   SPARKNLP_JSL_HOST: http://{{ .Release.Name }}-jsl-server-service:5000
   SPARKNLP_PORT: '9091'
+
+  # Datasaur Dinamic Environment variables
+  DATASAUR_ASSIST_VULCAN_BASIC_AUTH: ZGF0YXNhdXI6ZGF0YXNhdXI=
+
+  # can use the same host
+  DATASAUR_ASSIST_VULCAN_HOST: http://{{ .Release.Name }}-backend-service:8080
+
+  # the credentials here are used to connect to object storage and assuming role for sagemaker access
+  # currently Datasaur Dinamic only support s3. not minio.
+  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET: {{ .Values.intelligence.datasaurAssist.objectStorageBucket }}
+  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET_PREFIX: {{ .Values.intelligence.datasaurAssist.objectStorageBucketPrefix }}
+  DATASAUR_ASSIST_OBJECT_STORAGE_ENDPOINT: {{ .Values.intelligence.datasaurAssist.objectStorageEndpoint }}
+  DATASAUR_ASSIST_AWS_REGION: {{ .Values.intelligence.datasaurAssist.awsRegion }}
+  DATASAUR_ASSIST_AWS_ACCESS_KEY: {{ .Values.intelligence.datasaurAssist.awsAccessKey }}
+  DATASAUR_ASSIST_AWS_SECRET_KEY: {{ .Values.intelligence.datasaurAssist.awsSecretKey }}
+

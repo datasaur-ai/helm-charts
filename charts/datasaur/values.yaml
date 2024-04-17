@@ -8,6 +8,14 @@ dockerHub:
   enabled: true
 
 services:
+
+  # test
+  datasaurAssist:
+    enabled: true
+
+  dataProgramming:
+    enabled: true
+
   backend:
     replicas: 2
     resources:
@@ -245,6 +253,10 @@ loki:
 
 analytics:
   enabled: false
+
+intelligence:
+  datasaurAssist: 
+    objectStorageBucket: ""
 
 metabasemysql:
   primary:
