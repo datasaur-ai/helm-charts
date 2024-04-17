@@ -57,6 +57,12 @@ data:
   DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_POS_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.pos
   ENABLE_SPARKNLP_AUTO_LABEL: "true"
 {{- end }}
+{{- if .Values.services.datasaurDinamic.enabled }}
+  SHERLOCK_DATASAUR_ASSIST_ROW_BASED_ENDPOINT: http://{{ .Release.Name }}-datasaur-dinamic:8002/api/v1
+  ENABLE_DATASAUR_DINAMIC_ROW_BASED: "true"
+  ENABLE_DATASAUR_DINAMIC_ROW_BASED_PER_TEAM: "false"
+  ENABLE_DATASAUR_DINAMIC_HUGGINGFACE_AUTOTRAIN: "true"
+{{- end }}
 {{- if .Values.env }}
 {{ .Values.env | toYaml | indent 2 }}
 {{- end }}

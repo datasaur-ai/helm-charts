@@ -8,14 +8,6 @@ dockerHub:
   enabled: true
 
 services:
-
-  # test
-  datasaurAssist:
-    enabled: true
-
-  dataProgramming:
-    enabled: true
-
   backend:
     replicas: 2
     resources:
@@ -171,6 +163,10 @@ services:
     enabled: false
   sparknlpProvider:
     enabled: false
+  datasaurDinamic:
+    enabled: false
+  dataProgramming:
+    enabled: false
 
 tls:
   cert: null
@@ -255,8 +251,13 @@ analytics:
   enabled: false
 
 intelligence:
-  datasaurAssist: 
+  datasaurDinamic:
     objectStorageBucket: ""
+    objectStorageBucketPrefix: ""
+    objectStorageEndpoint: ""
+    awsRegion: ""
+    awsAccessKey: ""
+    awsSecretKey: ""
 
 metabasemysql:
   primary:

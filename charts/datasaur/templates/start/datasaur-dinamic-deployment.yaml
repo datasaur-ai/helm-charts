@@ -1,13 +1,13 @@
-{{- if .Values.services.datasaurAssist.enabled -}}
+{{- if .Values.services.datasaurDinamic.enabled -}}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-datasaur-assist-service
+  name: {{ .Release.Name }}-datasaur-dinamic-service
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-datasaur-assist
+    app: {{ .Release.Name }}-datasaur-dinamic
   ports:
     - protocol: TCP
       port: 8002
@@ -17,23 +17,23 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-datasaur-assist
-  name: {{ .Release.Name }}-datasaur-assist
+    app: {{ .Release.Name }}-datasaur-dinamic
+  name: {{ .Release.Name }}-datasaur-dinamic
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-datasaur-assist
+      app: {{ .Release.Name }}-datasaur-dinamic
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-datasaur-assist
+        app: {{ .Release.Name }}-datasaur-dinamic
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry}}/{{ end }}vulcan-ai/datasaur-assist/datasaur-assist:v1.0.1
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          name: {{ .Release.Name }}-datasaur-assist
+          name: {{ .Release.Name }}-datasaur-dinamic
           envFrom:
             - configMapRef:
                 name: intelligence-env
