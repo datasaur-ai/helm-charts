@@ -8,14 +8,11 @@ data:
   SPARKNLP_JSL_HOST: http://{{ .Release.Name }}-jsl-server-service:5000
   SPARKNLP_PORT: "9091"
 
-  # Datasaur Dinamic Environment variables
+  # Datasaur Dinamic environment variables
   DATASAUR_ASSIST_VULCAN_BASIC_AUTH: ZGF0YXNhdXI6ZGF0YXNhdXI=
-
-  # can use the same host
   DATASAUR_ASSIST_VULCAN_HOST: http://{{ .Release.Name }}-backend-service:8080
-
   # the credentials here are used to connect to object storage and assuming role for sagemaker access
-  # currently Datasaur Dinamic only support s3. not minio.
+  # currently Datasaur Dinamic only support s3
   DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET:
     { { .Values.intelligence.datasaurDinamic.objectStorageBucket } }
   DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET_PREFIX:
