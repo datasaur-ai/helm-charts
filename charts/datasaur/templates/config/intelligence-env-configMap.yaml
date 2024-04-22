@@ -13,15 +13,9 @@ data:
   DATASAUR_ASSIST_VULCAN_HOST: http://{{ .Release.Name }}-backend-service:8080
   # the credentials here are used to connect to object storage and assuming role for sagemaker access
   # currently Datasaur Dinamic only support s3
-  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET:
-    { { .Values.intelligence.datasaurDinamic.objectStorageBucket } }
-  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET_PREFIX:
-    { { .Values.intelligence.datasaurDinamic.objectStorageBucketPrefix } }
-  DATASAUR_ASSIST_OBJECT_STORAGE_ENDPOINT:
-    { { .Values.intelligence.datasaurDinamic.objectStorageEndpoint } }
-  DATASAUR_ASSIST_AWS_REGION:
-    { { .Values.intelligence.datasaurDinamic.awsRegion } }
-  DATASAUR_ASSIST_AWS_ACCESS_KEY:
-    { { .Values.intelligence.datasaurDinamic.awsAccessKey } }
-  DATASAUR_ASSIST_AWS_SECRET_KEY:
-    { { .Values.intelligence.datasaurDinamic.awsSecretKey } }
+  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET: {{ .Values.intelligence.datasaurDinamic.objectStorageBucket }}
+  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET_PREFIX: {{ .Values.intelligence.datasaurDinamic.objectStorageBucketPrefix }}
+  DATASAUR_ASSIST_OBJECT_STORAGE_ENDPOINT:   {{ .Values.intelligence.datasaurDinamic.objectStorageEndpoint }}
+  DATASAUR_ASSIST_AWS_REGION:   {{ .Values.intelligence.datasaurDinamic.awsRegion }}
+  DATASAUR_ASSIST_AWS_ACCESS_KEY: {{ .Values.intelligence.datasaurDinamic.awsAccessKey }}
+  DATASAUR_ASSIST_AWS_SECRET_KEY:  {{ .Values.intelligence.datasaurDinamic.awsSecretKey }}
