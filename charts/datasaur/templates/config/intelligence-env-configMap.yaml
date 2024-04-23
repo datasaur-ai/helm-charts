@@ -9,7 +9,7 @@ data:
   SPARKNLP_PORT: "9091"
 
   # Datasaur Dinamic environment variables
-  DATASAUR_ASSIST_VULCAN_BASIC_AUTH: ZGF0YXNhdXI6ZGF0YXNhdXI=
+  DATASAUR_ASSIST_VULCAN_BASIC_AUTH: {{ .Values.intelligence.datasaurDinamic.authKey }}
   DATASAUR_ASSIST_VULCAN_HOST: http://{{ .Release.Name }}-backend-service:8080
   # the credentials here are used to connect to object storage and assuming role for sagemaker access
   # currently Datasaur Dinamic only support s3
