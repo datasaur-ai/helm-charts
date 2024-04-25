@@ -31,7 +31,7 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
-{{- if eq (printf "%.31s" .Values.image.registry) "harbor-test.liberty.datasaur.ai" }}
+{{- if eq (printf "%.29s" .Values.image.registry) "harbor-qa.liberty.datasaur.ai" }}
         - image: erikvl87/languagetool
 {{- else }}
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}erikvl87/languagetool:6.3-1

@@ -31,10 +31,10 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
-{{- if or .Values.dockerHub.enabled (eq (printf "%.31s" .Values.image.registry) "harbor-test.liberty.datasaur.ai") }}
-        - image: thecodingmachine/gotenberg:7.8.3
+{{- if or .Values.dockerHub.enabled (eq (printf "%.29s" .Values.image.registry) "harbor-qa.liberty.datasaur.ai") }}
+        - image: thecodingmachine/gotenberg:8.2.2
 {{- else }}
-        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}thecodingmachine/gotenberg:7.8.3
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}thecodingmachine/gotenberg:8.2.2
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- end }}
           name: {{ .Release.Name }}-document-converter

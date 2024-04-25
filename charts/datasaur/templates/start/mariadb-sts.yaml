@@ -33,10 +33,10 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
-{{- if or .Values.dockerHub.enabled (eq (printf "%.31s" .Values.image.registry) "harbor-test.liberty.datasaur.ai") }}
-        - image: mariadb:10.3.39
+{{- if or .Values.dockerHub.enabled (eq (printf "%.29s" .Values.image.registry) "harbor-qa.liberty.datasaur.ai") }}
+        - image: mariadb:10.6.14
 {{- else }}
-        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}{{ .Values.imageCredentials.prefix | default "" }}{{ if .Values.imageCredentials.prefix }}/{{ end }}mariadb:10.3.39
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}{{ .Values.imageCredentials.prefix | default "" }}{{ if .Values.imageCredentials.prefix }}/{{ end }}mariadb:10.6.14
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- end }}
           name: {{ .Release.Name }}-mariadb
