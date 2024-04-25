@@ -32,7 +32,7 @@ spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry}}/{{ end }}vulcan-ai/datasaur-assist/datasaur-assist:v2.0.0
-          command: ["./run-worker.sh"]
+          command: ["/run-worker.sh"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Release.Name }}-datasaur-dinamic-worker
           envFrom:

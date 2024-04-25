@@ -19,4 +19,4 @@ data:
   DATASAUR_ASSIST_AWS_REGION:   {{ .Values.intelligence.datasaurDinamic.awsRegion }}
   DATASAUR_ASSIST_AWS_ACCESS_KEY: {{ .Values.intelligence.datasaurDinamic.awsAccessKey }}
   DATASAUR_ASSIST_AWS_SECRET_KEY:  {{ .Values.intelligence.datasaurDinamic.awsSecretKey }}
-  DATASAUR_ASSIST_CELERY_BROKER: "redis://redis:6379"
+  DATASAUR_ASSIST_CELERY_BROKER: redis://{{ .Release.Name }}-redis-service:6379
