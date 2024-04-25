@@ -31,7 +31,11 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
+{{- if eq (printf "%.31s" .Values.image.registry) "harbor-test.liberty.datasaur.ai" }}
+        - image: harbor-test.liberty.datasaur.ai/shared/vulcan-ai/datasaur-intelligence/nltk-provider:v-1-5-0
+{{- else }}
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}vulcan-ai/datasaur-intelligence/nltk-provider:v-1-5-0
+{{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Release.Name }}-nltk-provider
           envFrom:
