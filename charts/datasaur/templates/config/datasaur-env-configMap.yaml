@@ -15,6 +15,7 @@ data:
   URL_INSPECTOR_INGRESS_URL: https://{{ .Values.ingress.host }}
   URL_INSPECTOR_INGRESS_HOST: {{ .Values.ingress.host }}
   MAX_TOKENS_PER_SENTENCE: "3000"
+  ENABLE_DISTILBERT_AUTO_LABEL: "false"
 {{- if .Values.elasticsearch.enabled }}
   ELASTICSEARCH_NODE: http://{{ .Release.Name }}-elasticsearch-es-http:9200
   ENABLE_ANALYTICS: "true"
