@@ -2,8 +2,21 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: intelligence-env
-data: 
+data:
   NLTK_PROVIDER_CORENLP_URL: http://{{ .Release.Name }}-core-nlp-service:9000
-  NLTK_PROVIDER_PORT: '9090'
+  NLTK_PROVIDER_PORT: "9090"
   SPARKNLP_JSL_HOST: http://{{ .Release.Name }}-jsl-server-service:5000
-  SPARKNLP_PORT: '9091'
+  SPARKNLP_PORT: "9091"
+
+  # Datasaur Dinamic environment variables
+  DATASAUR_ASSIST_VULCAN_BASIC_AUTH: {{ .Values.intelligence.datasaurDinamic.authKey }}
+  DATASAUR_ASSIST_VULCAN_HOST: http://{{ .Release.Name }}-backend-service:8080
+  # the credentials here are used to connect to object storage and assuming role for sagemaker access
+  # currently Datasaur Dinamic only support s3
+  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET: {{ .Values.intelligence.datasaurDinamic.objectStorageBucket }}
+  DATASAUR_ASSIST_OBJECT_STORAGE_BUCKET_PREFIX: {{ .Values.intelligence.datasaurDinamic.objectStorageBucketPrefix }}
+  DATASAUR_ASSIST_OBJECT_STORAGE_ENDPOINT:   {{ .Values.intelligence.datasaurDinamic.objectStorageEndpoint }}
+  DATASAUR_ASSIST_AWS_REGION:   {{ .Values.intelligence.datasaurDinamic.awsRegion }}
+  DATASAUR_ASSIST_AWS_ACCESS_KEY: {{ .Values.intelligence.datasaurDinamic.awsAccessKey }}
+  DATASAUR_ASSIST_AWS_SECRET_KEY:  {{ .Values.intelligence.datasaurDinamic.awsSecretKey }}
+  DATASAUR_ASSIST_CELERY_BROKER: redis://{{ .Release.Name }}-redis-service:6379

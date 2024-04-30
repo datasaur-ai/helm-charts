@@ -1,0 +1,37 @@
+{{- if .Values.services.dataProgramming.enabled -}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-data-programming-service
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ .Release.Name }}-data-programming
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-data-programming
+  name: {{ .Release.Name }}-data-programming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-data-programming
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-data-programming
+    spec:
+{{ include "imagePullSecretTemplate" . | nindent 6 }}
+      containers:
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry}}/{{ end }}vulcan-ai/data-programming/data-programming:v2.3.0
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: {{ .Release.Name }}-data-programming
+{{- end -}}

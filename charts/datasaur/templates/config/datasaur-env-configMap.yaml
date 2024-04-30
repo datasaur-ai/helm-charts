@@ -15,6 +15,7 @@ data:
   URL_INSPECTOR_INGRESS_URL: https://{{ .Values.ingress.host }}
   URL_INSPECTOR_INGRESS_HOST: {{ .Values.ingress.host }}
   MAX_TOKENS_PER_SENTENCE: "3000"
+  ENABLE_DISTILBERT_AUTO_LABEL: "false"
 {{- if .Values.elasticsearch.enabled }}
   ELASTICSEARCH_NODE: http://{{ .Release.Name }}-elasticsearch-es-http:9200
   ENABLE_ANALYTICS: "true"
@@ -56,6 +57,23 @@ data:
   DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_NER_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.ner
   DATASAUR_EXTENSION_AUTO_LABEL_SPARKNLP_POS_ENDPOINT: http://{{ .Release.Name }}-sparknlp-provider-service:9091/tag/en.pos
   ENABLE_SPARKNLP_AUTO_LABEL: "true"
+{{- end }}
+{{- if .Values.services.datasaurDinamic.enabled }}
+  SHERLOCK_DATASAUR_ASSIST_ROW_BASED_ENDPOINT: http://{{ .Release.Name }}-datasaur-dinamic-service:8002/api/v1
+  ENABLE_DATASAUR_DINAMIC_ROW_BASED: "true"
+  ENABLE_DATASAUR_DINAMIC_ROW_BASED_PER_TEAM: "false"
+  ENABLE_DATASAUR_DINAMIC_HUGGINGFACE_AUTOTRAIN: "true"
+  ENABLE_DATASAUR_PREDICTIVE_ROW_BASED: "true"
+  ENABLE_DATASAUR_PREDICTIVE_ROW_BASED_PER_TEAM: "false"
+  ENABLE_LABEL_ERROR_DETECTION_ROW_BASED: "true"
+  ENABLE_LABEL_ERROR_DETECTION_ROW_BASED_PER_TEAM: "false"
+{{- end }}
+{{- if .Values.services.dataProgramming.enabled }}
+  SHERLOCK_DATA_PROGRAMMING_ENDPOINT: http://{{ .Release.Name }}-data-programming-service:8001/api/v1
+  DATA_PROGRAMMING_ROW_BASED_PROVIDER: STEGOSAURUS
+  ENABLE_DATA_PROGRAMMING_ROW_BASED: "true"
+  ENABLE_DATA_PROGRAMMING_TOKEN_BASED: "true"
+  ENABLE_DATA_PROGRAMMING_PER_TEAM: "false"
 {{- end }}
 {{- if .Values.env }}
 {{ .Values.env | toYaml | indent 2 }}
