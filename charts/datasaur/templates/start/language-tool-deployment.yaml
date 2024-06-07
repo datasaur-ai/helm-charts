@@ -31,7 +31,7 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
-        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}erikvl87/languagetool:6.3-1
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}erikvl87/languagetool:6.4-1
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Release.Name }}-language-tool
 {{- end -}}
