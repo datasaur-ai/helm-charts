@@ -1,26 +1,26 @@
-{{- if .Values.services.worker.external.enabled }}
+{{- if .Values.services.worker.iaa.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ .Release.Name }}-backend-external-worker
-  name: {{ .Release.Name }}-backend-external-worker
+    app: {{ .Release.Name }}-backend-iaa-worker
+  name: {{ .Release.Name }}-backend-iaa-worker
   annotations:
     "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "5"
 spec:
-  {{- if not .Values.services.worker.external.autoscaling.enabled }}
-  replicas: {{ .Values.services.worker.external.replicas }}
+  {{- if not .Values.services.worker.iaa.autoscaling.enabled }}
+  replicas: {{ .Values.services.worker.iaa.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-backend-external-worker
+      app: {{ .Release.Name }}-backend-iaa-worker
   template:
     metadata:
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        app: {{ .Release.Name }}-backend-external-worker
+        app: {{ .Release.Name }}-backend-iaa-worker
     spec:
 {{- if .Values.clusterSettings.backendServiceAccount }}
       serviceAccountName: {{ .Values.clusterSettings.backendServiceAccount }}
@@ -39,7 +39,7 @@ spec:
         - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry }}/{{ end }}{{ .Values.imageCredentials.prefix | default "datasaur" }}/backend-on-premise:{{ .Values.image.dockerTag }}
 {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          name: {{ .Release.Name }}-backend-external-worker
+          name: {{ .Release.Name }}-backend-iaa-worker
           envFrom:
             - configMapRef:
                 name: datasaur-env
@@ -74,7 +74,7 @@ spec:
             - name: ENABLE_MESSAGE_QUEUE_CONSUMER
               value: "true"
             - name: CONSUMED_QUEUES
-              value: {{ .Values.services.worker.external.consume }}
+              value: {{ .Values.services.worker.iaa.consume }}
             - name: RABBITMQ_PREFETCH_COUNT_ACTION
               value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_BACKGROUND
@@ -94,14 +94,14 @@ spec:
               subPath: {{ .name }}
           {{- end }}
           {{- end }}
-          {{- if not .Values.services.worker.external.resources.auto }}
+          {{- if not .Values.services.worker.iaa.resources.auto }}
           resources:
             limits:
-              cpu: {{ .Values.services.worker.external.resources.limits.cpu }}
-              memory: {{ .Values.services.worker.external.resources.limits.memory }}
+              cpu: {{ .Values.services.worker.iaa.resources.limits.cpu }}
+              memory: {{ .Values.services.worker.iaa.resources.limits.memory }}
             requests:
-              cpu: {{ .Values.services.worker.external.resources.requests.cpu }}
-              memory: {{ .Values.services.worker.external.resources.requests.memory }}
+              cpu: {{ .Values.services.worker.iaa.resources.requests.cpu }}
+              memory: {{ .Values.services.worker.iaa.resources.requests.memory }}
           {{- end }}
           livenessProbe:
             exec:
@@ -129,46 +129,46 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-backend-external-worker-service
+  name: {{ .Release.Name }}-backend-iaa-worker-service
 spec:
   type: ClusterIP
   selector:
-    app: {{ .Release.Name }}-backend-external-worker
+    app: {{ .Release.Name }}-backend-iaa-worker
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-{{- if .Values.services.worker.external.autoscaling.enabled }}
+{{- if .Values.services.worker.iaa.autoscaling.enabled }}
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ .Release.Name }}-backend-external-worker-autoscaler
+  name: {{ .Release.Name }}-backend-iaa-worker-autoscaler
   labels:
-    app: {{ .Release.Name }}-backend-external-worker-autoscaler
+    app: {{ .Release.Name }}-backend-iaa-worker-autoscaler
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ .Release.Name }}-backend-external-worker
-  minReplicas: {{ .Values.services.worker.external.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.services.worker.external.autoscaling.maxReplicas }}
+    name: {{ .Release.Name }}-backend-iaa-worker
+  minReplicas: {{ .Values.services.worker.iaa.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.services.worker.iaa.autoscaling.maxReplicas }}
   metrics:
-    {{- if .Values.services.worker.external.autoscaling.targetCPUUtilizationPercentage }}
+    {{- if .Values.services.worker.iaa.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.services.worker.external.autoscaling.targetCPUUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.worker.iaa.autoscaling.targetCPUUtilizationPercentage }}
     {{- end }}
-    {{- if .Values.services.worker.external.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- if .Values.services.worker.iaa.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.services.worker.external.autoscaling.targetMemoryUtilizationPercentage }}
+          averageUtilization: {{ .Values.services.worker.iaa.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
 {{- end }}

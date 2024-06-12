@@ -75,15 +75,17 @@ spec:
               value: "true"
             - name: CONSUMED_QUEUES
               value: {{ .Values.services.worker.llmCritical.consume }}
-            - name: RABBITMQ_PREFETCH_COUNT_EXTERNAL
-              value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_ACTION
+              value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_BACKGROUND
               value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_CRITICAL
               value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_EXTERNAL
+              value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_LLM_CRITICAL
               value: "1"
-            - name: RABBITMQ_PREFETCH_COUNT_BACKGROUND
+            - name: RABBITMQ_PREFETCH_COUNT_IAA
               value: "1"
           {{- if .Values.files }}
           volumeMounts:
