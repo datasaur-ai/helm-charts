@@ -85,6 +85,8 @@ spec:
               value: "1"
             - name: RABBITMQ_PREFETCH_COUNT_IAA
               value: "1"
+            - name: RABBITMQ_PREFETCH_COUNT_LLM_CRITICAL
+              value: "1"
           {{- if .Values.files }}
           volumeMounts:
           {{- $relname := .Release.Name -}}
