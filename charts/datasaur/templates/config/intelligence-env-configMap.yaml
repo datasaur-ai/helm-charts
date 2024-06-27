@@ -8,6 +8,7 @@ data:
   SPARKNLP_JSL_HOST: http://{{ .Release.Name }}-jsl-server-service:5000
   SPARKNLP_PORT: "9091"
 
+{{- if .Values.intelligence.datasaurAssist.awsAccessKey }}
   # Datasaur Dinamic environment variables
   DATASAUR_ASSIST_VULCAN_BASIC_AUTH: {{ .Values.intelligence.datasaurAssist.authKey }}
   DATASAUR_ASSIST_VULCAN_HOST: http://{{ .Release.Name }}-backend-service:8080
@@ -20,3 +21,4 @@ data:
   DATASAUR_ASSIST_AWS_ACCESS_KEY: {{ .Values.intelligence.datasaurAssist.awsAccessKey }}
   DATASAUR_ASSIST_AWS_SECRET_KEY:  {{ .Values.intelligence.datasaurAssist.awsSecretKey }}
   DATASAUR_ASSIST_CELERY_BROKER: redis://{{ .Release.Name }}-redis-service:6379
+{{- end }}
