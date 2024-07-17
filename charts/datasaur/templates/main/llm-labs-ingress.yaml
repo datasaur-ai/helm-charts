@@ -51,7 +51,7 @@ spec:
                 port:
                   number: 8080
 {{- end }}
-          - path: /(api|admin|graphql|auth|export)(.*)
+          - path: /(api|admin|graphql|auth|export|internal)(.*)
             pathType: Prefix
             backend:
               service:
