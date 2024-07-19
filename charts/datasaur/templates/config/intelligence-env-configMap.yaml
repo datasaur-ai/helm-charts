@@ -5,7 +5,6 @@ metadata:
 data:
   NLTK_PROVIDER_CORENLP_URL: http://{{ .Release.Name }}-core-nlp-service:9000
   NLTK_PROVIDER_PORT: "9090"
-  SPARKNLP_JSL_HOST: http://{{ .Release.Name }}-jsl-server-service:5000
   SPARKNLP_PORT: "9091"
 
 {{- if .Values.intelligence.datasaurAssist.awsAccessKey }}
