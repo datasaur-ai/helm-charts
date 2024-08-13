@@ -31,7 +31,7 @@ spec:
     spec:
 {{ include "imagePullSecretTemplate" . | nindent 6 }}
       containers:
-        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry}}/{{ end }}vulcan-ai/datasaur-assist/datasaur-assist:v2.8.0
+        - image: {{ .Values.image.registry | trimSuffix "/" }}{{ if .Values.image.registry}}/{{ end }}vulcan-ai/datasaur-assist/datasaur-assist:v2.9.0
           command: ["/run.sh"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: {{ .Release.Name }}-datasaur-dinamic
