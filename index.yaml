@@ -2,8 +2,28 @@ apiVersion: v1
 entries:
   datasaur:
   - apiVersion: v2
+    appVersion: 6.88.3
+    created: "2024-11-07T10:43:25.219116312Z"
+    dependencies:
+    - alias: loki
+      condition: loki.enabled
+      name: loki-stack
+      repository: https://grafana.github.io/helm-charts
+      version: 2.8.9
+    - alias: eckOperator
+      name: eck-operator
+      repository: https://helm.elastic.co
+      version: 2.9.0
+    description: A Helm chart for Datasaur VPC installation
+    digest: f8181dc7833a4b0975ffa98e336ae3385dd277556e08736fd6b4fe649215c9fd
+    name: datasaur
+    type: application
+    urls:
+    - https://datasaur-ai.github.io/helm-charts/datasaur-6.88.3.tgz
+    version: 6.88.3
+  - apiVersion: v2
     appVersion: 6.88.1
-    created: "2024-11-07T10:42:12.988034333Z"
+    created: "2024-11-07T10:43:25.203841366Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -23,7 +43,7 @@ entries:
     version: 6.88.1
   - apiVersion: v2
     appVersion: 6.87.0
-    created: "2024-11-07T10:42:12.972518392Z"
+    created: "2024-11-07T10:43:25.185639383Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -43,7 +63,7 @@ entries:
     version: 6.87.0
   - apiVersion: v2
     appVersion: 6.86.189
-    created: "2024-11-07T10:42:12.955023346Z"
+    created: "2024-11-07T10:43:25.16921999Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -63,7 +83,7 @@ entries:
     version: 6.86.189
   - apiVersion: v2
     appVersion: 6.86.0
-    created: "2024-11-07T10:42:12.93958496Z"
+    created: "2024-11-07T10:43:25.151497945Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -83,7 +103,7 @@ entries:
     version: 6.86.0
   - apiVersion: v2
     appVersion: 6.85.175
-    created: "2024-11-07T10:42:12.921038692Z"
+    created: "2024-11-07T10:43:25.135015512Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -103,7 +123,7 @@ entries:
     version: 6.85.175
   - apiVersion: v2
     appVersion: 6.85.0
-    created: "2024-11-07T10:42:12.905258567Z"
+    created: "2024-11-07T10:43:25.117306802Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -123,7 +143,7 @@ entries:
     version: 6.85.0
   - apiVersion: v2
     appVersion: 6.84.0
-    created: "2024-11-07T10:42:12.886039319Z"
+    created: "2024-11-07T10:43:25.100180016Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -143,7 +163,7 @@ entries:
     version: 6.84.0
   - apiVersion: v2
     appVersion: 6.83.0
-    created: "2024-11-07T10:42:12.868748072Z"
+    created: "2024-11-07T10:43:25.081692291Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -163,7 +183,7 @@ entries:
     version: 6.83.0
   - apiVersion: v2
     appVersion: 6.82.2
-    created: "2024-11-07T10:42:12.849899967Z"
+    created: "2024-11-07T10:43:25.065389104Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -183,7 +203,7 @@ entries:
     version: 6.82.2
   - apiVersion: v2
     appVersion: 6.82.1
-    created: "2024-11-07T10:42:12.833166222Z"
+    created: "2024-11-07T10:43:25.047170691Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -203,7 +223,7 @@ entries:
     version: 6.82.1
   - apiVersion: v2
     appVersion: 6.82.0
-    created: "2024-11-07T10:42:12.813927221Z"
+    created: "2024-11-07T10:43:25.030131469Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -223,7 +243,7 @@ entries:
     version: 6.82.0
   - apiVersion: v2
     appVersion: 6.81.0
-    created: "2024-11-07T10:42:12.797028639Z"
+    created: "2024-11-07T10:43:25.011821824Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -243,7 +263,7 @@ entries:
     version: 6.81.0
   - apiVersion: v2
     appVersion: 6.80.0
-    created: "2024-11-07T10:42:12.77953567Z"
+    created: "2024-11-07T10:43:24.995565977Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -263,7 +283,7 @@ entries:
     version: 6.80.0
   - apiVersion: v2
     appVersion: 6.79.0
-    created: "2024-11-07T10:42:12.761761176Z"
+    created: "2024-11-07T10:43:24.978430055Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -283,7 +303,7 @@ entries:
     version: 6.79.0
   - apiVersion: v2
     appVersion: 6.78.0
-    created: "2024-11-07T10:42:12.743434977Z"
+    created: "2024-11-07T10:43:24.959190796Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -303,7 +323,7 @@ entries:
     version: 6.78.0
   - apiVersion: v2
     appVersion: 6.77.0
-    created: "2024-11-07T10:42:12.727066783Z"
+    created: "2024-11-07T10:43:24.942846784Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -323,7 +343,7 @@ entries:
     version: 6.77.0
   - apiVersion: v2
     appVersion: 6.76.0
-    created: "2024-11-07T10:42:12.708771121Z"
+    created: "2024-11-07T10:43:24.925695674Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -343,7 +363,7 @@ entries:
     version: 6.76.0
   - apiVersion: v2
     appVersion: 6.75.0
-    created: "2024-11-07T10:42:12.690769725Z"
+    created: "2024-11-07T10:43:24.907404794Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -363,7 +383,7 @@ entries:
     version: 6.75.0
   - apiVersion: v2
     appVersion: '>=6.69.0'
-    created: "2024-11-07T10:42:12.503147744Z"
+    created: "2024-11-07T10:43:24.720370737Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -398,7 +418,7 @@ entries:
     version: 2.2.10
   - apiVersion: v2
     appVersion: '>=6.71.0'
-    created: "2024-11-07T10:42:12.674598387Z"
+    created: "2024-11-07T10:43:24.888376797Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -433,7 +453,7 @@ entries:
     version: 2.2.9
   - apiVersion: v2
     appVersion: '>=6.69.0'
-    created: "2024-11-07T10:42:12.65291492Z"
+    created: "2024-11-07T10:43:24.868911045Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -468,7 +488,7 @@ entries:
     version: 2.2.8
   - apiVersion: v2
     appVersion: '>=6.69.0'
-    created: "2024-11-07T10:42:12.631215337Z"
+    created: "2024-11-07T10:43:24.84750201Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -503,7 +523,7 @@ entries:
     version: 2.2.7
   - apiVersion: v2
     appVersion: '>=6.66.0'
-    created: "2024-11-07T10:42:12.611653056Z"
+    created: "2024-11-07T10:43:24.82681285Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -538,7 +558,7 @@ entries:
     version: 2.2.6
   - apiVersion: v2
     appVersion: '>=6.63.0'
-    created: "2024-11-07T10:42:12.589438874Z"
+    created: "2024-11-07T10:43:24.805055226Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -573,7 +593,7 @@ entries:
     version: 2.2.5
   - apiVersion: v2
     appVersion: '>=6.63.0'
-    created: "2024-11-07T10:42:12.566687508Z"
+    created: "2024-11-07T10:43:24.785043432Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -608,7 +628,7 @@ entries:
     version: 2.2.4
   - apiVersion: v2
     appVersion: '>=6.59.0'
-    created: "2024-11-07T10:42:12.545466928Z"
+    created: "2024-11-07T10:43:24.762983281Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -643,7 +663,7 @@ entries:
     version: 2.2.3
   - apiVersion: v2
     appVersion: '>=6.59.0'
-    created: "2024-11-07T10:42:12.525364767Z"
+    created: "2024-11-07T10:43:24.741723084Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -678,7 +698,7 @@ entries:
     version: 2.2.2
   - apiVersion: v2
     appVersion: '>=6.59.0'
-    created: "2024-11-07T10:42:12.481107528Z"
+    created: "2024-11-07T10:43:24.700677608Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -713,7 +733,7 @@ entries:
     version: 2.2.1
   - apiVersion: v2
     appVersion: '>=6.59.0'
-    created: "2024-11-07T10:42:12.456431101Z"
+    created: "2024-11-07T10:43:24.678815155Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -748,7 +768,7 @@ entries:
     version: 2.2.0
   - apiVersion: v2
     appVersion: '>=6.59.0'
-    created: "2024-11-07T10:42:12.267303694Z"
+    created: "2024-11-07T10:43:24.486112107Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -783,7 +803,7 @@ entries:
     version: 2.1.14
   - apiVersion: v2
     appVersion: '>=6.56.0'
-    created: "2024-11-07T10:42:12.235870517Z"
+    created: "2024-11-07T10:43:24.467000776Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -818,7 +838,7 @@ entries:
     version: 2.1.13
   - apiVersion: v2
     appVersion: '>=6.56.0'
-    created: "2024-11-07T10:42:12.184124896Z"
+    created: "2024-11-07T10:43:24.44588481Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -853,7 +873,7 @@ entries:
     version: 2.1.12
   - apiVersion: v2
     appVersion: '>=6.56.0'
-    created: "2024-11-07T10:42:12.149014989Z"
+    created: "2024-11-07T10:43:24.426142079Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -888,7 +908,7 @@ entries:
     version: 2.1.11
   - apiVersion: v2
     appVersion: '>=6.56.0'
-    created: "2024-11-07T10:42:12.128420047Z"
+    created: "2024-11-07T10:43:24.401949102Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -923,7 +943,7 @@ entries:
     version: 2.1.10
   - apiVersion: v2
     appVersion: '>=6.56.0'
-    created: "2024-11-07T10:42:12.432674595Z"
+    created: "2024-11-07T10:43:24.658842836Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -958,7 +978,7 @@ entries:
     version: 2.1.9
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.413353782Z"
+    created: "2024-11-07T10:43:24.636719436Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -993,7 +1013,7 @@ entries:
     version: 2.1.8
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.391856795Z"
+    created: "2024-11-07T10:43:24.61545913Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1028,7 +1048,7 @@ entries:
     version: 2.1.7
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.371329338Z"
+    created: "2024-11-07T10:43:24.596373457Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1063,7 +1083,7 @@ entries:
     version: 2.1.6
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.350432763Z"
+    created: "2024-11-07T10:43:24.575630647Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1098,7 +1118,7 @@ entries:
     version: 2.1.5
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.330656321Z"
+    created: "2024-11-07T10:43:24.555947316Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1133,7 +1153,7 @@ entries:
     version: 2.1.4
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.308373118Z"
+    created: "2024-11-07T10:43:24.533757684Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1168,7 +1188,7 @@ entries:
     version: 2.1.3
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.286594869Z"
+    created: "2024-11-07T10:43:24.506231133Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1203,7 +1223,7 @@ entries:
     version: 2.1.2
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.107894147Z"
+    created: "2024-11-07T10:43:24.377661903Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1238,7 +1258,7 @@ entries:
     version: 2.1.1
   - apiVersion: v2
     appVersion: '>=6.46.0'
-    created: "2024-11-07T10:42:12.088312052Z"
+    created: "2024-11-07T10:43:24.358420928Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1273,7 +1293,7 @@ entries:
     version: 2.1.0
   - apiVersion: v2
     appVersion: '>=6.39.0'
-    created: "2024-11-07T10:42:12.065340968Z"
+    created: "2024-11-07T10:43:24.325145185Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1309,7 +1329,7 @@ entries:
     version: 2.0.2
   - apiVersion: v2
     appVersion: '>=6.39.0'
-    created: "2024-11-07T10:42:12.042856487Z"
+    created: "2024-11-07T10:43:24.287802085Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1345,7 +1365,7 @@ entries:
     version: 2.0.1
   - apiVersion: v2
     appVersion: '>=6.39.0'
-    created: "2024-11-07T10:42:12.023266374Z"
+    created: "2024-11-07T10:43:24.269084068Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1381,7 +1401,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:12.000325907Z"
+    created: "2024-11-07T10:43:24.248634706Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1417,7 +1437,7 @@ entries:
     version: 1.9.2
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:11.980942692Z"
+    created: "2024-11-07T10:43:24.227594181Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1453,7 +1473,7 @@ entries:
     version: 1.9.1
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:11.959785576Z"
+    created: "2024-11-07T10:43:24.207601905Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1489,7 +1509,7 @@ entries:
     version: 1.9.0
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:11.930439104Z"
+    created: "2024-11-07T10:43:24.185592668Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1520,7 +1540,7 @@ entries:
     version: 1.8.1
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:11.915089064Z"
+    created: "2024-11-07T10:43:24.169248294Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1551,7 +1571,7 @@ entries:
     version: 1.8.0
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:11.897813924Z"
+    created: "2024-11-07T10:43:24.152130176Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1582,7 +1602,7 @@ entries:
     version: 1.7.0
   - apiVersion: v2
     appVersion: '>=6.30.0'
-    created: "2024-11-07T10:42:11.880095597Z"
+    created: "2024-11-07T10:43:24.136816641Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1613,7 +1633,7 @@ entries:
     version: 1.6.6
   - apiVersion: v2
     appVersion: '>=6.25.0'
-    created: "2024-11-07T10:42:11.864091479Z"
+    created: "2024-11-07T10:43:24.120672501Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1644,7 +1664,7 @@ entries:
     version: 1.6.5
   - apiVersion: v2
     appVersion: '>=6.25.0'
-    created: "2024-11-07T10:42:11.846401218Z"
+    created: "2024-11-07T10:43:24.103031136Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1675,7 +1695,7 @@ entries:
     version: 1.6.4
   - apiVersion: v2
     appVersion: '>=6.20.0'
-    created: "2024-11-07T10:42:11.830258072Z"
+    created: "2024-11-07T10:43:24.085742398Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1706,7 +1726,7 @@ entries:
     version: 1.6.3
   - apiVersion: v2
     appVersion: '>=6.20.0'
-    created: "2024-11-07T10:42:11.813116292Z"
+    created: "2024-11-07T10:43:24.066682533Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1737,7 +1757,7 @@ entries:
     version: 1.6.2
   - apiVersion: v2
     appVersion: '>=6.20.0'
-    created: "2024-11-07T10:42:11.795245512Z"
+    created: "2024-11-07T10:43:24.038883722Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1768,7 +1788,7 @@ entries:
     version: 1.6.1
   - apiVersion: v2
     appVersion: '>=6.20.0'
-    created: "2024-11-07T10:42:11.778969035Z"
+    created: "2024-11-07T10:43:24.018730935Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1799,7 +1819,7 @@ entries:
     version: 1.6.0
   - apiVersion: v2
     appVersion: '>=6.18.0'
-    created: "2024-11-07T10:42:11.761192337Z"
+    created: "2024-11-07T10:43:24.000552595Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1830,7 +1850,7 @@ entries:
     version: 1.5.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.745274392Z"
+    created: "2024-11-07T10:43:23.985204965Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1846,7 +1866,7 @@ entries:
     version: 1.4.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.732822381Z"
+    created: "2024-11-07T10:43:23.972960651Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1862,7 +1882,7 @@ entries:
     version: 1.3.1
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.706112644Z"
+    created: "2024-11-07T10:43:23.960164217Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1878,7 +1898,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.683138194Z"
+    created: "2024-11-07T10:43:23.946298072Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1894,7 +1914,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.671323944Z"
+    created: "2024-11-07T10:43:23.934249003Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1910,7 +1930,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.65948297Z"
+    created: "2024-11-07T10:43:23.922530353Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1926,7 +1946,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.647542174Z"
+    created: "2024-11-07T10:43:23.910830797Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1942,7 +1962,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: '>=6.0.0'
-    created: "2024-11-07T10:42:11.635464678Z"
+    created: "2024-11-07T10:43:23.898709111Z"
     dependencies:
     - alias: loki
       condition: loki.enabled
@@ -1956,4 +1976,4 @@ entries:
     urls:
     - https://datasaur-ai.github.io/helm-charts/datasaur-1.1.0.tgz
     version: 1.1.0
-generated: "2024-11-07T10:42:11.622782108Z"
+generated: "2024-11-07T10:43:23.886189404Z"
